@@ -7,6 +7,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Integrates application user data with Spring Security by
+ * converting persisted users to {@link UserDetails} instances.
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

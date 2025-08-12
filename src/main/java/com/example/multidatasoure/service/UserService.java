@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Provides user related operations such as registration,
+ * authentication and profile updates.
+ */
 @Service
 public class UserService {
 

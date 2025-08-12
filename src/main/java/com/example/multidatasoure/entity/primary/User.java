@@ -3,6 +3,10 @@ package com.example.multidatasoure.entity.primary;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * Entity representing a user stored in the primary data source.
+ * Holds authentication details and role information.
+ */
 @Data
 @Entity
 @Table(name = "users")
