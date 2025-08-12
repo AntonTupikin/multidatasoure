@@ -13,6 +13,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import liquibase.integration.spring.SpringLiquibase;
+
 @Configuration
 @EnableJpaRepositories(
         basePackages = "com.example.multidatasoure.repository.secondary",
@@ -33,13 +35,21 @@ public class SecondaryDataSourceConfig {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(secondaryDataSource());
-        emf.setPackagesToScan("com.example.multidatasoure.entity.secondary");
-        emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        return emf;
-    }
+      public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactory() {
+          LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+          emf.setDataSource(secondaryDataSource());
+          emf.setPackagesToScan("com.example.multidatasoure.entity.secondary");
+          emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+          return emf;
+      }
+
+      @Bean
+      public SpringLiquibase secondaryLiquibase() {
+          SpringLiquibase liquibase = new SpringLiquibase();
+          liquibase.setDataSource(secondaryDataSource());
+          liquibase.setChangeLog("classpath:db/changelog/db.changelog-secondary.xml");
+          return liquibase;
+      }
 
     @Bean
     public PlatformTransactionManager secondaryTransactionManager(
