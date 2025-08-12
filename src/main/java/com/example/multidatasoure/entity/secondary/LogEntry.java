@@ -3,6 +3,10 @@ package com.example.multidatasoure.entity.secondary;
 import jakarta.persistence.*;
 import lombok.Data;
 
+/**
+ * Entity used for persisting application log messages in the
+ * secondary data source for auditing purposes.
+ */
 @Data
 @Entity
 @Table(name = "log_entries")

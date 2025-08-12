@@ -13,6 +13,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 
+/**
+ * Utility component for creating and validating JSON Web Tokens
+ * used to secure API requests.
+ */
 @Component
 public class JwtTokenProvider {
     private final SecretKey key;
