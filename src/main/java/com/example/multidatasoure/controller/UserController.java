@@ -3,10 +3,14 @@ package com.example.multidatasoure.controller;
 import com.example.multidatasoure.dto.UserResponse;
 import com.example.multidatasoure.mapper.UserMapper;
 import com.example.multidatasoure.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,6 +25,10 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+    @Operation(
+            summary = "Получение информации о пользователе",
+            security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/me")
     public ResponseEntity<UserResponse> me(Authentication authentication) {
         return userService.findByUsername(authentication.getName())

@@ -40,3 +40,4 @@ infra/db
 *.hprof
 *.log
 infra/ml
+/target/
