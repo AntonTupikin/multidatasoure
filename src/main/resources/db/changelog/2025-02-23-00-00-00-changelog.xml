@@ -23,4 +23,12 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="2" author="agent">
+        <createTable tableName="log_entries">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

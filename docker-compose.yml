@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  primarydb:
+    image: postgres:15
+    container_name: primarydb
+    environment:
+      POSTGRES_DB: primarydb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+
+  secondarydb:
+    image: postgres:15
+    container_name: secondarydb
+    environment:
+      POSTGRES_DB: secondarydb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5433:5432"
