@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    primary:
+      url: jdbc:postgresql://localhost:5432/primarydb
+      username: user
+      password: pass
+      driver-class-name: org.postgresql.Driver
+    secondary:
+      url: jdbc:postgresql://localhost:5432/secondarydb
+      username: user
+      password: pass
+      driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+
+security:
+  jwt:
+    secret: 01234567890123456789012345678901
+    expiration: 3600000
