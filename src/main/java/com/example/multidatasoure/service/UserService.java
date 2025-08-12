@@ -48,6 +48,10 @@ public class UserService {
         return jwtTokenProvider.createToken(auth);
     }
 
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public Optional<User> editUser(Long id, UserDto dto) {
         return userRepository.findById(id).map(user -> {
             if (dto.getEmail() != null) {
