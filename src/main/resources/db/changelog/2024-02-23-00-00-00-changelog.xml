@@ -32,4 +32,5 @@
             <column name="message" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
+
 </databaseChangeLog>
