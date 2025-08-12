@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
-        logicalFilePath="db/changelog/db.changelog-master.xml">
-    <include relativeToChangelogFile="true" file="2025-02-23-00-00-02-changelog.xml"/>
-</databaseChangeLog>
