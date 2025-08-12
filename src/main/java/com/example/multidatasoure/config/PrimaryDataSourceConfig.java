@@ -2,6 +2,7 @@ package com.example.multidatasoure.config;
 
 import javax.sql.DataSource;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -50,5 +51,14 @@ public class PrimaryDataSourceConfig {
     public PlatformTransactionManager primaryTransactionManager(
             final @Qualifier("primaryEntityManagerFactory") LocalContainerEntityManagerFactoryBean emf) {
         return new JpaTransactionManager(emf.getObject());
+    }
+
+    @Primary
+    @Bean
+    public SpringLiquibase primaryLiquibase() {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setDataSource(primaryDataSource());
+        liquibase.setChangeLog("classpath:db/changelog/db.changelog-master.xml");
+        return liquibase;
     }
 }
