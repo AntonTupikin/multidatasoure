@@ -1,5 +1,6 @@
 package com.example.multidatasoure.service;
 
+
 import com.example.multidatasoure.entity.secondary.LogEntry;
 import com.example.multidatasoure.repository.secondary.LogEntryRepository;
 import lombok.RequiredArgsConstructor;

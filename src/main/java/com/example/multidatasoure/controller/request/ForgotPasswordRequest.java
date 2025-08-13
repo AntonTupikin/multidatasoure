@@ -1,4 +1,4 @@
-package com.example.multidatasoure.dto;
+package com.example.multidatasoure.controller.request;
 
 import lombok.Data;
 

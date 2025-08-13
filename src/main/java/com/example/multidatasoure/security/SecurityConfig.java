@@ -29,7 +29,8 @@ public class SecurityConfig {
     };
 
     private static final String[] ALL_ROLES_URLs = {
-            "/api/me"
+            "/api/me",
+            "/api/user/{id}"
     };
     private static final String[] UN_SECURED_URLs = {
             "/api/login",

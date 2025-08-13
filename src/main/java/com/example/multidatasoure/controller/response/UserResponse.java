@@ -1,4 +1,4 @@
-package com.example.multidatasoure.dto;
+package com.example.multidatasoure.controller.response;
 
 import com.example.multidatasoure.entity.primary.Role;
 import lombok.Data;

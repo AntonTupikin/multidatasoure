@@ -1,12 +1,16 @@
-package com.example.multidatasoure.entity.secondary;
+package com.example.multidatasoure.entity.primary;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,22 +18,28 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
-/**
- * Entity used for persisting application log messages in the
- * secondary data source for auditing purposes.
- */
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "log_entries")
-public class LogEntry {
+@Table(name = "organizations")
+public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String message;
+    @JoinColumn(nullable = false)
+    @ManyToOne
+    @ToString.Exclude
+    private User user;
+
+    @Column(nullable = false, unique = true)
+    private Long inn;
+
+    @Column(nullable = false)
+    private String title;
 
     @Override
     public final boolean equals(Object o) {
@@ -38,8 +48,8 @@ public class LogEntry {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        LogEntry logEntry = (LogEntry) o;
-        return getId() != null && Objects.equals(getId(), logEntry.getId());
+        Organization that = (Organization) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
