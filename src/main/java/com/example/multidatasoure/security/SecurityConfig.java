@@ -20,6 +20,9 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+    private static final String[] EMPLOYEE_URLs = {
+            "/api/employees/**",
+    };
     private static final String[] SUPERVISOR_URLs = {
             "/api/**"
     };
@@ -29,7 +32,7 @@ public class SecurityConfig {
     };
 
     private static final String[] ALL_ROLES_URLs = {
-            "/api/me",
+            "/api/users/me",
             "/api/user/{id}"
     };
     private static final String[] UN_SECURED_URLs = {
@@ -71,9 +74,10 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(UN_SECURED_URLs).permitAll()
                                 .requestMatchers(SWAGGER_URLs).permitAll()
-                                .requestMatchers(ALL_ROLES_URLs).hasAnyRole(Role.ADMIN.name(), Role.SUPERVISOR.name())
+                                .requestMatchers(ALL_ROLES_URLs).hasAnyRole(Role.ADMIN.name(), Role.SUPERVISOR.name(), Role.EMPLOYEE.name())
                                 .requestMatchers(SUPERVISOR_URLs).hasRole(Role.SUPERVISOR.name())
                                 .requestMatchers(ADMIN_URLs).hasRole(Role.ADMIN.name())
+                                .requestMatchers(EMPLOYEE_URLs).hasRole(Role.EMPLOYEE.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->

@@ -1,13 +1,14 @@
 package com.example.multidatasoure.controller.response;
 
 import com.example.multidatasoure.entity.primary.Role;
-import lombok.Data;
 
-@Data
-public class UserResponse {
-    private Long id;
-    private String username;
-    private String email;
-    private Role role;
+import java.util.List;
+
+public record UserResponse(Long id,
+                           String username,
+                           String email,
+                           Role role,
+                           List<OrganizationResponse> organizationsResponses) {
+
 }
 

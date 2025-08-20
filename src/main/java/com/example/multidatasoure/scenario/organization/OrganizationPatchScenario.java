@@ -1,6 +1,6 @@
-package com.example.multidatasoure.scenario;
+package com.example.multidatasoure.scenario.organization;
 
-import com.example.multidatasoure.controller.request.OrganizationCreateRequest;
+import com.example.multidatasoure.controller.request.OrganizationPatchRequest;
 import com.example.multidatasoure.controller.response.OrganizationResponse;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
@@ -15,17 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OrganizationCreateScenario {
+public class OrganizationPatchScenario {
     private final UserService userService;
     private final OrganizationService organizationService;
     private final OrganizationMapper organizationMapper;
 
     @Transactional
-    public OrganizationResponse create(OrganizationCreateRequest organizationCreateRequest, Long userId) {
-        log.info("Create organization for user with id {}", userId);
+    public OrganizationResponse patch(Long id, OrganizationPatchRequest request, Long userId) {
+        log.info("Patch organization for user with id {}", userId);
         User user = userService.findById(userId);
-        Organization organization = organizationService.save(organizationCreateRequest, user);
-        log.info("Create manager for user with id {} finished", userId);
+        Organization organization = organizationService.getByIdAndUser(id,user);
+        if(request.title()!=null){
+            organizationService.setTitle(organization, request.title());
+        }
+        if(request.inn()!=null){
+            organizationService.setInn(organization, request.inn());
+        }
+        log.info("Patch manager for user with id {} finished", userId);
         return organizationMapper.toOrganizationResponse(organization);
     }
 }

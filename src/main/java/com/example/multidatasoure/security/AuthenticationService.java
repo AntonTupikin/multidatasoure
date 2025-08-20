@@ -1,7 +1,7 @@
 package com.example.multidatasoure.security;
 
-import com.example.multidatasoure.controller.request.LoginRequest;
-import com.example.multidatasoure.controller.response.LoginResponse;
+import com.example.multidatasoure.controller.request.AuthenticationRequest;
+import com.example.multidatasoure.controller.response.AuthenticationResponse;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.service.LogEntriesService;
 import com.example.multidatasoure.service.UserService;
@@ -21,7 +21,7 @@ public class AuthenticationService {
     private final JwtTokenProvider jwtTokenProvider;
     private final LogEntriesService logEntriesService;
 
-    public LoginResponse login(LoginRequest request) {
+    public AuthenticationResponse login(AuthenticationRequest request) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         User user = userService.getByUsername(request.username());
@@ -29,9 +29,9 @@ public class AuthenticationService {
         return generateTokens(auth);
     }
 
-    private LoginResponse generateTokens(Authentication authentication) {
+    private AuthenticationResponse generateTokens(Authentication authentication) {
         String accessToken = jwtTokenProvider.createToken(authentication);
-        return new LoginResponse(accessToken, "Bearer");
+        return new AuthenticationResponse(accessToken, "Bearer");
     }
 
 

@@ -1,8 +1,12 @@
 package com.example.multidatasoure.service;
 
-import com.example.multidatasoure.dto.UserDto;
+import com.example.multidatasoure.controller.request.UserCreateRequest;
+import com.example.multidatasoure.entity.primary.Role;
 import com.example.multidatasoure.entity.primary.User;
+import com.example.multidatasoure.exception.ConflictException;
+import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.UserRepository;
+import com.example.multidatasoure.utils.FieldsUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +26,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private void checkEmail(String email) {
+        if (userRepository.existsByEmailIgnoreCase(email)) {
+            throw new ConflictException("message.exception.conflict.user", email);
+        }
+    }
+
+    public void patchPassword(User user, String password) {
+        user.setPassword(password);
+    }
+
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
+
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
     }
@@ -30,42 +48,22 @@ public class UserService {
         return getByUsername(principal.getName());
     }
 
-    public User register(UserDto dto) {
+    public User save(UserCreateRequest request, Role role) {
         User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        if (dto.getRole() != null) {
-            user.setRole(dto.getRole());
-        }
+        String email = FieldsUtils.normalizeEmail(request.email());
+        checkEmail(email);
+        user.setUsername(email);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(role);
         return userRepository.save(user);
     }
 
     public User getByUsername(String username) {
-        return findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        return findByUsername(username).orElseThrow(() -> new NotFoundException("message.exception.not-found.user"));
     }
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    public Optional<User> patchUser(Long id, UserDto dto) {
-        return userRepository.findById(id).map(user -> {
-            if (dto.getEmail() != null) {
-                user.setEmail(dto.getEmail());
-            }
-            if (dto.getPassword() != null) {
-                user.setPassword(passwordEncoder.encode(dto.getPassword()));
-            }
-            if (dto.getRole() != null) {
-                user.setRole(dto.getRole());
-            }
-            return userRepository.save(user);
-        });
-    }
-
-    public void forgotPassword(String email) {
-        // Placeholder for password recovery logic
     }
 }

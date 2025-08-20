@@ -7,4 +7,5 @@
         logicalFilePath="db/changelog/db.changelog-master.xml">
     <include relativeToChangelogFile="true" file="2025-02-23-00-00-02-changelog.xml"/>
     <include file="/db/changelog/2025-08-12-15-00-00-changelog.xml"/>
+    <include file="/db/changelog/2025-08-20-20-50-00-changelog.xml"/>
 </databaseChangeLog>
