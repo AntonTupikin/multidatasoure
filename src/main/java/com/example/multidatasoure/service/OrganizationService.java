@@ -9,11 +9,15 @@ import com.example.multidatasoure.repository.primary.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
-
+    public List<Organization> getAllByUser(User user){
+        return organizationRepository.findAllByUser(user);
+    }
     public Organization getByIdAndUser(Long id, User user) {
         return organizationRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.organization"));

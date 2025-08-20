@@ -5,6 +5,7 @@ import com.example.multidatasoure.controller.request.OrganizationPatchRequest;
 import com.example.multidatasoure.controller.response.OrganizationResponse;
 import com.example.multidatasoure.scenario.organization.OrganizationCreateScenario;
 import com.example.multidatasoure.scenario.organization.OrganizationDeleteScenario;
+import com.example.multidatasoure.scenario.organization.OrganizationGetScenario;
 import com.example.multidatasoure.scenario.organization.OrganizationPatchScenario;
 import com.example.multidatasoure.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,7 +34,16 @@ public class OrganizationController {
     private final OrganizationCreateScenario organizationCreateScenario;
     private final OrganizationDeleteScenario organizationDeleteScenario;
     private final UserService userService;
+    private final OrganizationGetScenario organizationGetScenario;
 
+    @Operation(
+            summary = "Получение всех организаций пользователя",
+            security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/organization")
+    public List<OrganizationResponse> get(Principal principal) {
+        return organizationGetScenario.get(userService.get(principal).getId());
+    }
     @Operation(
             summary = "Создание организации",
             security = @SecurityRequirement(name = "bearer"))
