@@ -3,6 +3,7 @@ package com.example.multidatasoure.controller.request;
 import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public abstract class AbstractEmployeeFilter {
@@ -22,6 +23,24 @@ public abstract class AbstractEmployeeFilter {
                                 .get(Organization.Fields.id),
                         organizationId
                 );
+    }
+
+    protected Specification<User> byOrganizationIdNot(Long organizationId) {
+        return (root, query, cb) -> {
+            if (organizationId == null) {
+                return null;
+            }
+            var subquery = query.subquery(Long.class);
+            var subRoot = subquery.from(User.class);
+            var employeeJoin = subRoot.join(User.Fields.employeeProfile, JoinType.LEFT);
+            var organizationJoin = employeeJoin.join(EmployeeProfile.Fields.organizations, JoinType.LEFT);
+            subquery.select(subRoot.get(User.Fields.id))
+                    .where(cb.and(
+                            cb.equal(subRoot.get(User.Fields.id), root.get(User.Fields.id)),
+                            cb.equal(organizationJoin.get(Organization.Fields.id), organizationId)
+                    ));
+            return cb.not(cb.exists(subquery));
+        };
     }
 
 }

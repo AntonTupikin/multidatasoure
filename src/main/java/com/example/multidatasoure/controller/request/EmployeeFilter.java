@@ -10,9 +10,11 @@ import org.springframework.data.jpa.domain.Specification;
 public class EmployeeFilter extends AbstractEmployeeFilter {
     private Long supervisorId;
     private Long organizationId;
+    private Long organizationIdNot;
 
     public Specification<User> getSpecification(User supervisor) {
         return Specification.where(byUser(supervisor))
-                .and(byOrganizationId(organizationId));
+                .and(byOrganizationId(organizationId))
+                .and(byOrganizationIdNot(organizationIdNot));
     }
 }
