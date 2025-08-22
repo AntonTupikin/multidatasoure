@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -49,15 +48,6 @@ public class EmployeeController {
     @GetMapping("/employees/{id}")
     public UserResponse getById(@PathVariable Long id, Principal principal) {
         return employeeGetScenario.findByIdAndUser(id, userService.get(principal).getId());
-    }
-
-    @Operation(
-            summary = "Получение всех работников пользователя",
-            security = @SecurityRequirement(name = "bearer"))
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/employees")
-    public List<UserResponse> getAll(Principal principal) {
-        return employeeGetScenario.getAllByUser(userService.get(principal).getId());
     }
 
     @Operation(
