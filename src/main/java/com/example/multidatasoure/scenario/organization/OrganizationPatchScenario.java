@@ -24,11 +24,11 @@ public class OrganizationPatchScenario {
     public OrganizationResponse patch(Long id, OrganizationPatchRequest request, Long userId) {
         log.info("Patch organization for user with id {}", userId);
         User user = userService.findById(userId);
-        Organization organization = organizationService.getByIdAndUser(id,user);
-        if(request.title()!=null){
+        Organization organization = organizationService.getByIdAndUser(id, user);
+        if (request.title() != null) {
             organizationService.setTitle(organization, request.title());
         }
-        if(request.inn()!=null){
+        if (request.inn() != null) {
             organizationService.setInn(organization, request.inn());
         }
         log.info("Patch manager for user with id {} finished", userId);
