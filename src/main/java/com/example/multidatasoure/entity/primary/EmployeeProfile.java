@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "employees_profiles")
+@FieldNameConstants
 public class EmployeeProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

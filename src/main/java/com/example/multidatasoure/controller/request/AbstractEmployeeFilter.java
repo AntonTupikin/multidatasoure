@@ -1,5 +1,6 @@
 package com.example.multidatasoure.controller.request;
 
+import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,13 +15,13 @@ public abstract class AbstractEmployeeFilter {
     }
 
     protected Specification<User> byOrganizationId(Long organizationId) {
-        return (root, query, criteriaBuilder) -> {
-            if (organizationId == null) {
-                return null;
-            } else {
-                return criteriaBuilder.equal(root.get(User.Fields.organizations).get(Organization.Fields.id), organizationId);
-            }
-        };
+        return (root, query, cb) -> organizationId == null ? null :
+                cb.equal(
+                        root.join(User.Fields.employeeProfile)
+                                .join(EmployeeProfile.Fields.organizations)
+                                .get(Organization.Fields.id),
+                        organizationId
+                );
     }
 
 }
