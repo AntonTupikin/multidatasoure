@@ -24,9 +24,7 @@ public class EmployeePatchScenario {
         log.info("Patch employee for user with id {}", userId);
         User user = userService.findById(userId);
         User employee = userService.findByIdAndSupervisorId(id, user.getId());
-        if (!request.organizationIds().isEmpty()) {
-            employeeService.update(employee, request.organizationIds());
-        }
+        employeeService.setOrganizations(employee, request.organizationIds());
         log.info("Patch employee {} for user with id {} finished", employee.getId(), request);
         return userMapper.toUserResponse(employee);
     }

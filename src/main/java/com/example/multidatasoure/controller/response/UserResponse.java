@@ -8,7 +8,7 @@ public record UserResponse(Long id,
                            String username,
                            String email,
                            Role role,
-                           List<OrganizationResponse> organizationsResponses) {
+                           List<OrganizationResponse> organizations) {
 
 }
 

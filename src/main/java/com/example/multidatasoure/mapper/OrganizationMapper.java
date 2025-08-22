@@ -4,7 +4,7 @@ import com.example.multidatasoure.controller.response.OrganizationResponse;
 import com.example.multidatasoure.entity.primary.Organization;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface OrganizationMapper {
     OrganizationResponse toOrganizationResponse(Organization organization);
 }
