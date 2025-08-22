@@ -1,6 +1,7 @@
 package com.example.multidatasoure.scenario.employee;
 
 import com.example.multidatasoure.controller.request.EmployeeFilter;
+import com.example.multidatasoure.controller.response.EmployeeResponse;
 import com.example.multidatasoure.controller.response.UserResponse;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
@@ -39,10 +40,12 @@ public class EmployeeGetScenario {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse findByIdAndUser(Long id, Long userId) {
+    public EmployeeResponse findByIdAndUser(Long id, Long userId) {
         log.info("Find employee with id {} for user id {}", id, userId);
         User user = userService.findById(userId);
-        return userMapper.toUserResponse(userService.findByIdAndSupervisorId(id, user.getId()));
+        User employee = userService.findByIdAndSupervisorId(id, userId);
+        List<Organization> orgs = organizationService.getAllByUserAndEmployee(user, employee);
+        return userMapper.toEmployeeResponse(employee, orgs);
     }
 
     @Transactional(readOnly = true)

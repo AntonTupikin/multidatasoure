@@ -39,7 +39,7 @@ public class Organization {
     @JoinColumn(nullable = false)
     @ManyToOne
     @ToString.Exclude
-    private User owner;
+    private User user;
 
     @Column(nullable = false, unique = true)
     private Long inn;
@@ -50,7 +50,7 @@ public class Organization {
     // сотрудники организации
     @ManyToMany
     @JoinTable(
-            name = "organization_employee",
+            name = "employee_organization",
             joinColumns = @JoinColumn(name = "organization_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )

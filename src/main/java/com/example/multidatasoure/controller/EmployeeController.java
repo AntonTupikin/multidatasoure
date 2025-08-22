@@ -3,6 +3,7 @@ package com.example.multidatasoure.controller;
 import com.example.multidatasoure.controller.request.EmployeeFilter;
 import com.example.multidatasoure.controller.request.EmployeePatchRequest;
 import com.example.multidatasoure.controller.request.UserCreateRequest;
+import com.example.multidatasoure.controller.response.EmployeeResponse;
 import com.example.multidatasoure.controller.response.UserResponse;
 import com.example.multidatasoure.scenario.employee.EmployeeCreateScenario;
 import com.example.multidatasoure.scenario.employee.EmployeeGetScenario;
@@ -50,7 +51,7 @@ public class EmployeeController {
             security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/employees/{id}")
-    public UserResponse getById(@PathVariable Long id, Principal principal) {
+    public EmployeeResponse getById(@PathVariable Long id, Principal principal) {
         return employeeGetScenario.findByIdAndUser(id, userService.get(principal).getId());
     }
 

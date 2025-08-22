@@ -15,16 +15,16 @@ import java.util.List;
 @Service
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
-    public List<Organization> getAllByOwnerAndEmployee(User owner, User employee){
-        return organizationRepository.findAllByOwnerAndEmployeesContaining(owner, employee);
+    public List<Organization> getAllByUserAndEmployee(User owner, User employee){
+        return organizationRepository.findAllByUserAndEmployeesContains(owner, employee);
     }
 
-    public List<Organization> getAllByOwner(User owner){
-        return organizationRepository.findAllByOwner(owner);
+    public List<Organization> getAllByUser(User owner){
+        return organizationRepository.findAllByUser(owner);
     }
 
     public Organization getByIdAndOwner(Long id, User owner) {
-        return organizationRepository.findByIdAndOwner(id, owner)
+        return organizationRepository.findByIdAndUser(id, owner)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.organization"));
     }
 
@@ -44,7 +44,7 @@ public class OrganizationService {
         Organization organization = new Organization();
         organization.setInn(organizationCreateRequest.inn());
         organization.setTitle(organizationCreateRequest.title());
-        organization.setOwner(owner);
+        organization.setUser(owner);
         return organizationRepository.save(organization);
     }
 

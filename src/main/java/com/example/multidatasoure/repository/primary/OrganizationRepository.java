@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
     boolean existsByInn(Long inn);
     boolean existsByTitle(String title);
-    Optional<Organization> findByIdAndOwner(Long id, User owner);
-    List<Organization> findAllByOwner(User owner);
-    List<Organization> findAllByOwnerAndEmployeesContaining(User owner, User employee);
+    Optional<Organization> findByIdAndUser(Long id, User owner);
+    List<Organization> findAllByUser(User owner);
+    List<Organization> findAllByUserAndEmployeesContains(User owner, User employee);
 }

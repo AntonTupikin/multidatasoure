@@ -27,7 +27,7 @@ public class OrganizationGetScenario {
         User user = userService.findById(userId);
         //PasswordResetToken passwordResetToken = authenticationService.createPasswordResetTokenForUser(user);
         //registrationRequestService.updateRegistrationRequest(user);
-        return organizationService.getAllByOwner(user).stream().map(organizationMapper::toOrganizationResponse).collect(Collectors.toList());
+        return organizationService.getAllByUser(user).stream().map(organizationMapper::toOrganizationResponse).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
