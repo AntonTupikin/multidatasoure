@@ -18,9 +18,9 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -48,7 +48,7 @@ public class EmployeeProfile {
             inverseJoinColumns = @JoinColumn(name = "organization_id")
     )
     @ToString.Exclude
-    private List<Organization> organizations = new ArrayList<>();
+    private Set<Organization> organizations = new HashSet<>();
 
     @Override
     public final boolean equals(Object o) {

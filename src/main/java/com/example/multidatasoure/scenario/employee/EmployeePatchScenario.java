@@ -27,7 +27,7 @@ public class EmployeePatchScenario {
         if (!request.organizationIds().isEmpty()) {
             employeeService.update(employee, request.organizationIds());
         }
-        log.info("Patch employee {} for user with id {} finished", employee.getId(), userId);
+        log.info("Patch employee {} for user with id {} finished", employee.getId(), request);
         return userMapper.toUserResponse(employee);
     }
 }

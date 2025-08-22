@@ -15,6 +15,9 @@ import java.util.List;
 @Service
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
+    public List<Organization> getAllByUserAndEmployee(User user, User employee){
+        return organizationRepository.findAllByUser(user);
+    }
     public List<Organization> getAllByUser(User user){
         return organizationRepository.findAllByUser(user);
     }

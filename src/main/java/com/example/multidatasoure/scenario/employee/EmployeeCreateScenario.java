@@ -25,7 +25,7 @@ public class EmployeeCreateScenario {
         log.info("Create employee %s for user with id %d".formatted(request.toString(), userId));
         User supervisor = userService.findById(userId);
         User user = userService.save(request, Role.EMPLOYEE, supervisor);
-        employeeService.save(user, null);
+        employeeService.save(user);
         return userMapper.toUserResponse(user);
     }
 }

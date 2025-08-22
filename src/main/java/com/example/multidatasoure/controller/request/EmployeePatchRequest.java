@@ -1,6 +1,6 @@
 package com.example.multidatasoure.controller.request;
 
-import java.util.List;
+import java.util.Set;
 
-public record EmployeePatchRequest (List<Long> organizationIds){
+public record EmployeePatchRequest(Set<Long> organizationIds){
 }
