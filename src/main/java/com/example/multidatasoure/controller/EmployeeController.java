@@ -55,7 +55,7 @@ public class EmployeeController {
             security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/employees/getAll")
-    public Page<UserResponse> getAllByOrganization(@ParameterObject Pageable pageable, Principal principal, @ParameterObject EmployeeFilter employeeFilter) {
+    public Page<UserResponse> getAll(@ParameterObject Pageable pageable, Principal principal, @ParameterObject EmployeeFilter employeeFilter) {
         return employeeGetScenario.getAllByUser(userService.get(principal).getId(), pageable, employeeFilter);
     }
 }

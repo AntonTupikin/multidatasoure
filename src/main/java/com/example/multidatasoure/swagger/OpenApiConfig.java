@@ -12,7 +12,7 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI craneRecordsOpenAPI() {
+    public OpenAPI demoMultiDataOpenAPI() {
         return new OpenAPI()
                 .servers(List.of(new Server().url("/")))
                 .info(new Info().title("Demo MultiData")
