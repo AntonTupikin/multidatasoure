@@ -19,8 +19,6 @@ public class UserGetScenario {
     @Transactional
     public UserResponse get(Long userId) {
         User user = userService.findById(userId);
-        //PasswordResetToken passwordResetToken = authenticationService.createPasswordResetTokenForUser(user);
-        //registrationRequestService.updateRegistrationRequest(user);
         return userMapper.toUserResponse(user);
     }
 }

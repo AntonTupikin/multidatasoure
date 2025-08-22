@@ -21,7 +21,7 @@ public class UserCreateScenario {
     @Transactional
     public UserResponse create(UserCreateRequest request) {
         log.info("Create user %s", request.toString());
-        User user = userService.save(request, Role.SUPERVISOR);
+        User user = userService.save(request, Role.SUPERVISOR, null);
         //PasswordResetToken passwordResetToken = authenticationService.createPasswordResetTokenForUser(user);
         //registrationRequestService.updateRegistrationRequest(user);
         return userMapper.toUserResponse(user);

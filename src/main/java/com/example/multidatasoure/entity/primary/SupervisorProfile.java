@@ -1,54 +1,39 @@
 package com.example.multidatasoure.entity.primary;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "organizations")
-@FieldNameConstants
-public class Organization {
+@Table(name = "supervisors_profiles")
+public class SupervisorProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // владелец организации
     @JoinColumn(nullable = false)
-    @ManyToOne
+    @OneToOne
     @ToString.Exclude
     private User user;
-
-    @Column(nullable = false, unique = true)
-    private Long inn;
-
-    @Column(nullable = false)
-    private String title;
-
-    // сотрудники организации
-    @ManyToMany(mappedBy = "organizations")
-    private List<EmployeeProfile> employees = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
@@ -57,7 +42,7 @@ public class Organization {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Organization that = (Organization) o;
+        SupervisorProfile that = (SupervisorProfile) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

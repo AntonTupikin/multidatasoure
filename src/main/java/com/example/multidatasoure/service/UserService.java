@@ -1,6 +1,8 @@
 package com.example.multidatasoure.service;
 
+import com.example.multidatasoure.controller.request.AbstractEmployeeFilter;
 import com.example.multidatasoure.controller.request.UserCreateRequest;
+import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.Role;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.exception.ConflictException;
@@ -8,11 +10,14 @@ import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.UserRepository;
 import com.example.multidatasoure.utils.FieldsUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,11 +49,19 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
     }
 
+    public User findByIdAndSupervisorId(Long id, Long supervisorId) {
+        return userRepository.findByIdAndSupervisorId(id, supervisorId).orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
+    }
+
+    public Page<User> getAllByUser(User user, Pageable pageable, AbstractEmployeeFilter abstractEmployeeFilter) {
+        return userRepository.findAll(abstractEmployeeFilter.getSpecification(user), pageable);
+    }
+
     public User get(Principal principal) {
         return getByUsername(principal.getName());
     }
 
-    public User save(UserCreateRequest request, Role role) {
+    public User save(UserCreateRequest request, Role role, User supervisor) {
         User user = new User();
         String email = FieldsUtils.normalizeEmail(request.email());
         checkEmail(email);
@@ -56,6 +69,9 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(role);
+        if (role==Role.EMPLOYEE){
+            user.setSupervisor(supervisor);
+        }
         return userRepository.save(user);
     }
 
@@ -65,5 +81,13 @@ public class UserService {
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public List<User> getAllEmployeesByUser(User user) {
+        return userRepository.findAllBySupervisor(user);
+    }
+
+    public List<User> getAllEmployeesByOrganization(Organization organization) {
+        return userRepository.findAllByEmployeeProfile_Organizations_Id(organization.getId());
     }
 }

@@ -1,6 +1,7 @@
 package com.example.multidatasoure.scenario.organization;
 
 import com.example.multidatasoure.controller.response.OrganizationResponse;
+import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.mapper.OrganizationMapper;
 import com.example.multidatasoure.service.OrganizationService;
@@ -22,10 +23,17 @@ public class OrganizationGetScenario {
     private final OrganizationMapper organizationMapper;
 
     @Transactional
-    public List<OrganizationResponse> get(Long userId) {
+    public List<OrganizationResponse> getAllByUser(Long userId) {
         User user = userService.findById(userId);
         //PasswordResetToken passwordResetToken = authenticationService.createPasswordResetTokenForUser(user);
         //registrationRequestService.updateRegistrationRequest(user);
         return organizationService.getAllByUser(user).stream().map(organizationMapper::toOrganizationResponse).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public OrganizationResponse findByIdAndUser(Long id, Long userId) {
+        log.info("Find organization with id {} for user with id {}", id, userId);
+        Organization organization = organizationService.getByIdAndUser(id, userService.findById(userId));
+        return organizationMapper.toOrganizationResponse(organization);
     }
 }

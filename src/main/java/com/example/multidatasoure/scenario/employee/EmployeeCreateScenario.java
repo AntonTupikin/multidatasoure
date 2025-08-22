@@ -21,7 +21,8 @@ public class EmployeeCreateScenario {
     @Transactional
     public UserResponse create(UserCreateRequest request, Long userId) {
         log.info("Create employee %s for user with id %d".formatted(request.toString(), userId));
-        User user = userService.save(request, Role.EMPLOYEE);
+        User supervisor = userService.findById(userId);
+        User user = userService.save(request, Role.EMPLOYEE, supervisor);
         return userMapper.toUserResponse(user);
     }
 }

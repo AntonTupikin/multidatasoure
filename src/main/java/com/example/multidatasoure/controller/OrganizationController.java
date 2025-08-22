@@ -41,9 +41,19 @@ public class OrganizationController {
             security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/organization")
-    public List<OrganizationResponse> get(Principal principal) {
-        return organizationGetScenario.get(userService.get(principal).getId());
+    public List<OrganizationResponse> getAll(Principal principal) {
+        return organizationGetScenario.getAllByUser(userService.get(principal).getId());
     }
+
+    @Operation(
+            summary = "Получение информации об организации по ее id",
+            security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/organization/{id}")
+    public OrganizationResponse getById(@PathVariable Long id, Principal principal) {
+        return organizationGetScenario.findByIdAndUser(id, userService.get(principal).getId());
+    }
+
     @Operation(
             summary = "Создание организации",
             security = @SecurityRequirement(name = "bearer"))
