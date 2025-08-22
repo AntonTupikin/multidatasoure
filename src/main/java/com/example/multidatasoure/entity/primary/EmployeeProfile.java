@@ -5,8 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,9 +16,7 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -40,15 +36,6 @@ public class EmployeeProfile {
     @OneToOne
     @ToString.Exclude
     private User user;
-
-    @ManyToMany
-    @JoinTable(
-            name = "employee_organization",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "organization_id")
-    )
-    @ToString.Exclude
-    private Set<Organization> organizations = new HashSet<>();
 
     @Override
     public final boolean equals(Object o) {

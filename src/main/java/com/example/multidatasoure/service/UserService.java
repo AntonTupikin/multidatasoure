@@ -89,6 +89,6 @@ public class UserService {
     }
 
     public List<User> getAllEmployeesByOrganization(Organization organization) {
-        return userRepository.findAllByEmployeeProfile_Organizations_Id(organization.getId());
+        return userRepository.findAllByOrganizations_Id(organization.getId());
     }
 }

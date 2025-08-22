@@ -16,5 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     List<User> findAllBySupervisor(User supervisor);
 
-    List<User> findAllByEmployeeProfile_Organizations_Id(Long orgId);
+    List<User> findAllByOrganizations_Id(Long orgId);
 }

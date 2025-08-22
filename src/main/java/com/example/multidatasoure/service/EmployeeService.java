@@ -38,7 +38,7 @@ public class EmployeeService {
         // add new organizations that were not previously associated
         organizationsIds.stream()
                 .filter(id -> !existingIds.contains(id))
-                .forEach(id -> currentOrganizations.add(organizationService.getByIdAndUser(id, employee.getSupervisor())));
+                .forEach(id -> currentOrganizations.add(organizationService.getByIdAndOwner(id, employee.getSupervisor())));
 
         employeeProfileRepository.save(employeeProfile);
 
@@ -46,8 +46,16 @@ public class EmployeeService {
     }*/
 
     public void setOrganizations(User employee, Set<Long> organizationsIds) {
-        List<Organization> organizations = organizationsIds.stream().map(id -> organizationService.getByIdAndUser(id, employee.getSupervisor())).toList();
+        List<Organization> organizations = organizationsIds.stream()
+                .map(id -> organizationService.getByIdAndOwner(id, employee.getSupervisor()))
+                .toList();
+        // update employee memberships
+        employee.getOrganizations().clear();
         employee.setOrganizations(organizations);
+        organizations.forEach(org -> {
+            if (!org.getEmployees().contains(employee)) {
+                org.getEmployees().add(employee);
+            }
+        });
     }
 }
-;

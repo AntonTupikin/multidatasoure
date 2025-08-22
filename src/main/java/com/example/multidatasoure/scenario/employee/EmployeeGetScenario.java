@@ -28,7 +28,7 @@ public class EmployeeGetScenario {
     @Transactional(readOnly = true)
     public List<UserResponse> getAllByOrganization(Long userId, Long organizationId) {
         User user = userService.findById(userId);
-        Organization organization = organizationService.getByIdAndUser(organizationId, user);
+        Organization organization = organizationService.getByIdAndOwner(organizationId, user);
         return userService.getAllEmployeesByOrganization(organization).stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
