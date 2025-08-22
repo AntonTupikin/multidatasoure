@@ -1,6 +1,5 @@
 package com.example.multidatasoure.controller.request;
 
-import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
 import jakarta.persistence.criteria.JoinType;
@@ -18,8 +17,7 @@ public abstract class AbstractEmployeeFilter {
     protected Specification<User> byOrganizationId(Long organizationId) {
         return (root, query, cb) -> organizationId == null ? null :
                 cb.equal(
-                        root.join(User.Fields.employeeProfile)
-                                .join(EmployeeProfile.Fields.organizations)
+                        root.join(User.Fields.organizations)
                                 .get(Organization.Fields.id),
                         organizationId
                 );
@@ -32,8 +30,7 @@ public abstract class AbstractEmployeeFilter {
             }
             var subquery = query.subquery(Long.class);
             var subRoot = subquery.from(User.class);
-            var employeeJoin = subRoot.join(User.Fields.employeeProfile, JoinType.LEFT);
-            var organizationJoin = employeeJoin.join(EmployeeProfile.Fields.organizations, JoinType.LEFT);
+            var organizationJoin = subRoot.join(User.Fields.organizations, JoinType.LEFT);
             subquery.select(subRoot.get(User.Fields.id))
                     .where(cb.and(
                             cb.equal(subRoot.get(User.Fields.id), root.get(User.Fields.id)),

@@ -27,13 +27,13 @@ public class OrganizationGetScenario {
         User user = userService.findById(userId);
         //PasswordResetToken passwordResetToken = authenticationService.createPasswordResetTokenForUser(user);
         //registrationRequestService.updateRegistrationRequest(user);
-        return organizationService.getAllByUser(user).stream().map(organizationMapper::toOrganizationResponse).collect(Collectors.toList());
+        return organizationService.getAllByOwner(user).stream().map(organizationMapper::toOrganizationResponse).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public OrganizationResponse findByIdAndUser(Long id, Long userId) {
         log.info("Find organization with id {} for user with id {}", id, userId);
-        Organization organization = organizationService.getByIdAndUser(id, userService.findById(userId));
+        Organization organization = organizationService.getByIdAndOwner(id, userService.findById(userId));
         return organizationMapper.toOrganizationResponse(organization);
     }
 }

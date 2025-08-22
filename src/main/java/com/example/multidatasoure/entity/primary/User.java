@@ -9,8 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -62,7 +62,7 @@ public class User {
     @ToString.Exclude
     private User supervisor;
 
-    @OneToMany(mappedBy = "user")
+    @ManyToMany(mappedBy = "employees")
     @Builder.Default
     @ToString.Exclude
     private List<Organization> organizations = new ArrayList<>();

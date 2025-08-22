@@ -24,7 +24,7 @@ public class OrganizationPatchScenario {
     public OrganizationResponse patch(Long id, OrganizationPatchRequest request, Long userId) {
         log.info("Patch organization for user with id {}", userId);
         User user = userService.findById(userId);
-        Organization organization = organizationService.getByIdAndUser(id, user);
+        Organization organization = organizationService.getByIdAndOwner(id, user);
         if (request.title() != null) {
             organizationService.setTitle(organization, request.title());
         }

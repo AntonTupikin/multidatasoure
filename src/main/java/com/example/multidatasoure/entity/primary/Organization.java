@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -38,7 +39,7 @@ public class Organization {
     @JoinColumn(nullable = false)
     @ManyToOne
     @ToString.Exclude
-    private User user;
+    private User owner;
 
     @Column(nullable = false, unique = true)
     private Long inn;
@@ -47,8 +48,14 @@ public class Organization {
     private String title;
 
     // сотрудники организации
-    @ManyToMany(mappedBy = "organizations")
-    private List<EmployeeProfile> employees = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "organization_employee",
+            joinColumns = @JoinColumn(name = "organization_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    @ToString.Exclude
+    private List<User> employees = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {

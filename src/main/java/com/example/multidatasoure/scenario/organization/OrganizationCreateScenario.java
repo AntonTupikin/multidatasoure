@@ -23,8 +23,8 @@ public class OrganizationCreateScenario {
     @Transactional
     public OrganizationResponse create(OrganizationCreateRequest organizationCreateRequest, Long userId) {
         log.info("Create organization for user with id {}", userId);
-        User user = userService.findById(userId);
-        Organization organization = organizationService.save(organizationCreateRequest, user);
+        User owner = userService.findById(userId);
+        Organization organization = organizationService.save(organizationCreateRequest, owner);
         log.info("Create manager for user with id {} finished", userId);
         return organizationMapper.toOrganizationResponse(organization);
     }

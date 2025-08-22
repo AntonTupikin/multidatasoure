@@ -20,7 +20,7 @@ public class OrganizationDeleteScenario {
     public void delete(Long id, Long userId) {
         log.info("Delete organization for user with id {}", userId);
         User user = userService.findById(userId);
-        Organization organization = organizationService.getByIdAndUser(id, user);
+        Organization organization = organizationService.getByIdAndOwner(id, user);
         organizationService.delete(organization);
     }
 }
