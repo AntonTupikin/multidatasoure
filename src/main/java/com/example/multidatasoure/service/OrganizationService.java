@@ -18,7 +18,7 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     public List<Organization> getAllByUserAndEmployee(User owner, User employee){
         EmployeeProfile profile = employee.getEmployeeProfile();
-        return organizationRepository.findAllByUserAndEmployeesEmployee(owner, profile);
+        return organizationRepository.findAllByUserAndEmployeesContains(owner, profile);
     }
 
     public List<Organization> getAllByUser(User owner){

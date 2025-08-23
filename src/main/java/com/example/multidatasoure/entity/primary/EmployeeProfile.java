@@ -4,9 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,11 +16,7 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import com.example.multidatasoure.entity.primary.EmployeeOrganization;
 
 @Getter
 @Setter
@@ -42,10 +36,6 @@ public class EmployeeProfile {
     @OneToOne
     @ToString.Exclude
     private User user;
-
-    @OneToMany(mappedBy = "employee", orphanRemoval = true, cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<EmployeeOrganization> organizations = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
