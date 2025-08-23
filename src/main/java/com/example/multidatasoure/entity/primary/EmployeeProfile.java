@@ -17,9 +17,9 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,10 +40,10 @@ public class EmployeeProfile {
     @ToString.Exclude
     private User user;
 
-    @ManyToMany(mappedBy = "employees")
+    @ManyToMany(mappedBy = "employeesProfiles")
     @ToString.Exclude
     @Builder.Default
-    private List<Organization> organizations = new ArrayList<>();
+    private Set<Organization> organizations = new HashSet<>();
 
 
     @Override

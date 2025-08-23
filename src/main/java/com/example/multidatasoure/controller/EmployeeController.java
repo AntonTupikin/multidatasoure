@@ -1,7 +1,6 @@
 package com.example.multidatasoure.controller;
 
 import com.example.multidatasoure.controller.request.EmployeeFilter;
-import com.example.multidatasoure.controller.request.EmployeePatchRequest;
 import com.example.multidatasoure.controller.request.UserCreateRequest;
 import com.example.multidatasoure.controller.response.EmployeeResponse;
 import com.example.multidatasoure.controller.response.UserResponse;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,12 +62,12 @@ public class EmployeeController {
         return employeeGetScenario.getAllByUser(userService.get(principal).getId(), pageable, employeeFilter);
     }
 
-    @Operation(
+/*    @Operation(
             summary = "Редактирование работника",
             security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/employees/{id}")
     public UserResponse patch(@PathVariable Long id, @RequestBody EmployeePatchRequest request, Principal principal) {
         return employeePatchScenario.patch(id, request, userService.get(principal).getId());
-    }
+    }*/
 }

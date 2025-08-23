@@ -23,7 +23,7 @@ public abstract class AbstractEmployeeFilter {
             }
             var subquery = query.subquery(Long.class);
             var organization = subquery.from(Organization.class);
-            var employeeJoin = organization.join(Organization.Fields.employees);
+            var employeeJoin = organization.join(Organization.Fields.employeesProfiles);
             subquery.select(employeeJoin.get(EmployeeProfile.Fields.user).get(User.Fields.id))
                     .where(cb.equal(organization.get(Organization.Fields.id), organizationId));
             return cb.and(

@@ -51,11 +51,12 @@ public class Organization {
 
     // сотрудники организации
     @ManyToMany
-    @JoinTable(joinColumns = {@JoinColumn(name = "organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "employee_id")})
+    @JoinTable( name = "employees_profiles_organizations",
+            joinColumns = {@JoinColumn(name = "organization_id")},
+            inverseJoinColumns = {@JoinColumn(name = "employee_profile_id")})
     @Builder.Default
     @ToString.Exclude
-    private List<EmployeeProfile> employees = new ArrayList<>();
+    private List<EmployeeProfile> employeesProfiles = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
