@@ -50,7 +50,7 @@ public class Organization {
     // сотрудники организации
     @ManyToMany
     @JoinTable(
-            name = "employee_organization",
+            name = "employees_organizations",
             joinColumns = @JoinColumn(name = "organization_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
