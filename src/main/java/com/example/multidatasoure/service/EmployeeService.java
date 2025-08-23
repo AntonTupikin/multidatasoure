@@ -53,8 +53,8 @@ public class EmployeeService {
         employee.getOrganizations().clear();
         employee.setOrganizations(organizations);
         organizations.forEach(org -> {
-            if (!org.getEmployees().contains(employee)) {
-                org.getEmployees().add(employee);
+            if (!org.getEmployees().contains(employee.getEmployeeProfile())) {
+                org.getEmployees().add(employee.getEmployeeProfile());
             }
         });
     }

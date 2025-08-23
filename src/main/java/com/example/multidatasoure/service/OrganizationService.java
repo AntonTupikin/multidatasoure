@@ -1,6 +1,7 @@
 package com.example.multidatasoure.service;
 
 import com.example.multidatasoure.controller.request.OrganizationCreateRequest;
+import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.exception.ConflictException;
@@ -16,7 +17,8 @@ import java.util.List;
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     public List<Organization> getAllByUserAndEmployee(User owner, User employee){
-        return organizationRepository.findAllByUserAndEmployeesContains(owner, employee);
+        EmployeeProfile profile = employee.getEmployeeProfile();
+        return organizationRepository.findAllByUserAndEmployeesContains(owner, profile);
     }
 
     public List<Organization> getAllByUser(User owner){

@@ -18,7 +18,7 @@ public abstract class AbstractEmployeeFilter {
         return (root, query, cb) -> organizationId == null ? null :
                 cb.equal(
                         root.join(User.Fields.organizations)
-                                .get(Organization.Fields.id),
+                                .get(Organization.Fields.employees),
                         organizationId
                 );
     }

@@ -55,7 +55,7 @@ public class Organization {
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
     @ToString.Exclude
-    private List<User> employees = new ArrayList<>();
+    private List<EmployeeProfile> employees = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {

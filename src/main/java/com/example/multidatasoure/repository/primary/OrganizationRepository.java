@@ -1,5 +1,6 @@
 package com.example.multidatasoure.repository.primary;
 
+import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     boolean existsByTitle(String title);
     Optional<Organization> findByIdAndUser(Long id, User owner);
     List<Organization> findAllByUser(User owner);
-    List<Organization> findAllByUserAndEmployeesContains(User owner, User employee);
+    List<Organization> findAllByUserAndEmployeesContains(User user, EmployeeProfile employee);
+
 }
