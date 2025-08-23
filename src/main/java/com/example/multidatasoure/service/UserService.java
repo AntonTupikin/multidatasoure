@@ -1,7 +1,7 @@
 package com.example.multidatasoure.service;
 
+import com.example.multidatasoure.controller.request.AbstractUserFilter;
 import com.example.multidatasoure.controller.request.UserCreateRequest;
-import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.Role;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.exception.ConflictException;
@@ -10,12 +10,13 @@ import com.example.multidatasoure.repository.primary.UserRepository;
 import com.example.multidatasoure.utils.FieldsUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,6 +30,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public Page<User> getAllByUser(User user, Pageable pageable, AbstractUserFilter userFilter) {
+        return userRepository.findAll(userFilter.getSpecification(user), pageable);
+    }
 
     private void checkEmail(String email) {
         if (userRepository.existsByEmailIgnoreCase(email)) {
@@ -76,13 +81,5 @@ public class UserService {
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    public List<User> getAllEmployeesByUser(User user) {
-        return userRepository.findAllBySupervisor(user);
-    }
-
-    public List<User> getAllEmployeesByOrganization(Organization organization) {
-        return userRepository.findAllByOrganizations_Id(organization.getId());
     }
 }

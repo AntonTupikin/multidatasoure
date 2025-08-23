@@ -23,10 +23,6 @@ public class OrganizationService {
         organization.setUsers(users);
     }
 
-    public List<Organization> getAllByUserAndEmployee(User owner, User employee) {
-        return organizationRepository.findAllByOwnerAndUsersContains(owner, employee);
-    }
-
     public List<Organization> getAllByUser(User owner) {
         return organizationRepository.findAllByOwner(owner);
     }

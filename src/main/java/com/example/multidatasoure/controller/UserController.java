@@ -1,5 +1,6 @@
 package com.example.multidatasoure.controller;
 
+import com.example.multidatasoure.controller.request.UserFilter;
 import com.example.multidatasoure.controller.request.UserPatchRequest;
 import com.example.multidatasoure.controller.response.UserResponse;
 import com.example.multidatasoure.scenario.user.UserDeleteScenario;
@@ -9,6 +10,9 @@ import com.example.multidatasoure.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +33,15 @@ public class UserController {
     private final UserService userService;
     private final UserPatchScenario userPatchScenario;
     private final UserDeleteScenario userDeleteScenario;
+
+    @Operation(
+            summary = "Получение информации о пользователе",
+            security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users")
+    public Page<UserResponse> getAll(Principal principal, @ParameterObject Pageable pageable, @ParameterObject UserFilter userFilter) {
+        return userGetScenario.getAllByUser(userService.get(principal).getId(), pageable,userFilter);
+    }
 
     @Operation(
             summary = "Получение информации о пользователе",
