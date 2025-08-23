@@ -45,7 +45,7 @@ public class EmployeeGetScenario {
         User user = userService.findById(userId);
         User employee = userService.findByIdAndSupervisorId(id, userId);
         List<Organization> orgs = organizationService.getAllByUserAndEmployee(user, employee);
-        return userMapper.toEmployeeResponse(employee, orgs);
+        return userMapper.toEmployeeResponse(employee);
     }
 
     @Transactional(readOnly = true)

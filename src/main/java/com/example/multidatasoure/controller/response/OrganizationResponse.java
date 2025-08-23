@@ -1,4 +1,6 @@
 package com.example.multidatasoure.controller.response;
 
-public record OrganizationResponse(Long id, String title, Long inn) {
+import java.util.List;
+
+public record OrganizationResponse(Long id, String title, Long inn, List<UserResponse>employees) {
 }
