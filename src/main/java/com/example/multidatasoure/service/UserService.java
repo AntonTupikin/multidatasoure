@@ -10,6 +10,7 @@ import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.UserRepository;
 import com.example.multidatasoure.utils.FieldsUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +25,7 @@ import java.util.Optional;
  * Provides user related operations such as registration,
  * authentication and profile updates.
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -55,6 +57,7 @@ public class UserService {
     }
 
     public Page<User> getAllByUser(User user, Pageable pageable, AbstractEmployeeFilter abstractEmployeeFilter) {
+        log.info(userRepository.findAll(abstractEmployeeFilter.getSpecification(user), pageable).toString());
         return userRepository.findAll(abstractEmployeeFilter.getSpecification(user), pageable);
     }
 

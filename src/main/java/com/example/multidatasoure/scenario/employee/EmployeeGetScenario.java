@@ -52,6 +52,7 @@ public class EmployeeGetScenario {
     public Page<UserResponse> getAllByUser(Long userId, Pageable pageable, EmployeeFilter employeeFilter) {
         log.info("Get employees for user. {}. {}.", pageable, employeeFilter);
         Page<User> users = userService.getAllByUser(userService.findById(userId), pageable, employeeFilter);
+        log.info(users.toString());
         return users.map(userMapper::toUserResponse);
     }
 
