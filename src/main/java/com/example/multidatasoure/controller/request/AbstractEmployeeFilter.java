@@ -4,6 +4,7 @@ import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.Role;
 import com.example.multidatasoure.entity.primary.User;
+import com.example.multidatasoure.entity.primary.EmployeeOrganization;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -23,7 +24,8 @@ public abstract class AbstractEmployeeFilter {
             }
             var subquery = query.subquery(Long.class);
             var organization = subquery.from(Organization.class);
-            var employeeJoin = organization.join(Organization.Fields.employees);
+            var employeeJoin = organization.join(Organization.Fields.employees)
+                    .join(EmployeeOrganization.Fields.employee);
             subquery.select(employeeJoin.get(EmployeeProfile.Fields.user).get(User.Fields.id))
                     .where(cb.equal(organization.get(Organization.Fields.id), organizationId));
             return cb.and(
@@ -48,12 +50,12 @@ public abstract class AbstractEmployeeFilter {
                 return null;
             }
             var subquery = query.subquery(Long.class);
-            var subRoot = subquery.from(User.class);
-            var organizationJoin = subRoot.join(User.Fields.organizations, JoinType.LEFT);
-            subquery.select(subRoot.get(User.Fields.id))
+            var subRoot = subquery.from(EmployeeOrganization.class);
+            var employeeJoin = subRoot.join(EmployeeOrganization.Fields.employee).get(EmployeeProfile.Fields.user);
+            subquery.select(employeeJoin.get(User.Fields.id))
                     .where(cb.and(
-                            cb.equal(subRoot.get(User.Fields.id), root.get(User.Fields.id)),
-                            cb.equal(organizationJoin.get(Organization.Fields.id), organizationId)
+                            cb.equal(employeeJoin.get(User.Fields.id), root.get(User.Fields.id)),
+                            cb.equal(subRoot.join(EmployeeOrganization.Fields.organization).get(Organization.Fields.id), organizationId)
                     ));
             return cb.not(cb.exists(subquery));
         };

@@ -5,6 +5,8 @@ import com.example.multidatasoure.controller.request.UserCreateRequest;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.Role;
 import com.example.multidatasoure.entity.primary.User;
+import com.example.multidatasoure.entity.primary.EmployeeOrganization;
+import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.exception.ConflictException;
 import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.UserRepository;
@@ -92,6 +94,9 @@ public class UserService {
     }
 
     public List<User> getAllEmployeesByOrganization(Organization organization) {
-        return userRepository.findAllByOrganizations_Id(organization.getId());
+        return organization.getEmployees().stream()
+                .map(EmployeeOrganization::getEmployee)
+                .map(EmployeeProfile::getUser)
+                .toList();
     }
 }

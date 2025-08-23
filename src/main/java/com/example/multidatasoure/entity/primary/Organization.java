@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.multidatasoure.entity.primary.EmployeeOrganization;
 @Getter
 @Setter
 @ToString
@@ -48,14 +49,9 @@ public class Organization {
     private String title;
 
     // сотрудники организации
-    @ManyToMany
-    @JoinTable(
-            name = "employees_organizations",
-            joinColumns = @JoinColumn(name = "organization_id"),
-            inverseJoinColumns = @JoinColumn(name = "employee_id")
-    )
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<EmployeeProfile> employees = new ArrayList<>();
+    private List<EmployeeOrganization> employees = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
