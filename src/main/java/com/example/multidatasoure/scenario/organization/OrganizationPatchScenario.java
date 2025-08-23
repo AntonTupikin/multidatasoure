@@ -31,6 +31,9 @@ public class OrganizationPatchScenario {
         if (request.inn() != null) {
             organizationService.setInn(organization, request.inn());
         }
+        if (request.usersIds() != null) {
+            organizationService.setEmployees(organization, request.usersIds(), user);
+        }
         log.info("Patch manager for user with id {} finished", userId);
         return organizationMapper.toOrganizationResponse(organization);
     }

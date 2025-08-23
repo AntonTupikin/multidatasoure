@@ -49,13 +49,6 @@ public class EmployeeService {
         List<Organization> organizations = organizationsIds.stream()
                 .map(id -> organizationService.getByIdAndOwner(id, employee.getSupervisor()))
                 .toList();
-        // update employee memberships
-        employee.getOrganizations().clear();
-        employee.setOrganizations(organizations);
-        organizations.forEach(org -> {
-            if (!org.getEmployees().contains(employee.getEmployeeProfile())) {
-                org.getEmployees().add(employee.getEmployeeProfile());
-            }
-        });
+        employee.getEmployeeProfile().setOrganizations(organizations);
     }
 }

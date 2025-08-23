@@ -32,7 +32,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmployeeService employeeService;
 
     private void checkEmail(String email) {
         if (userRepository.existsByEmailIgnoreCase(email)) {

@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -36,6 +39,12 @@ public class EmployeeProfile {
     @OneToOne
     @ToString.Exclude
     private User user;
+
+    @ManyToMany(mappedBy = "employees")
+    @ToString.Exclude
+    @Builder.Default
+    private List<Organization> organizations = new ArrayList<>();
+
 
     @Override
     public final boolean equals(Object o) {

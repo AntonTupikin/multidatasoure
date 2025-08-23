@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "organizations")
 @FieldNameConstants
 public class Organization {
@@ -49,11 +51,9 @@ public class Organization {
 
     // сотрудники организации
     @ManyToMany
-    @JoinTable(
-            name = "employees_organizations",
-            joinColumns = @JoinColumn(name = "organization_id"),
-            inverseJoinColumns = @JoinColumn(name = "employee_id")
-    )
+    @JoinTable(joinColumns = {@JoinColumn(name = "organization_id")},
+            inverseJoinColumns = {@JoinColumn(name = "employee_id")})
+    @Builder.Default
     @ToString.Exclude
     private List<EmployeeProfile> employees = new ArrayList<>();
 
