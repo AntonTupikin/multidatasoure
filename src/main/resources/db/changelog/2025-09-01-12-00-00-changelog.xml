@@ -6,26 +6,26 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
         logicalFilePath="db/changelog/2025-09-01-12-00-00-changelog.xml">
     <changeSet id="2025-09-01-12-00-00-changelog" author="gpt">
-        <createTable tableName="employees_profiles_organizations">
+        <createTable tableName="users_organizations">
             <column name="id" autoIncrement="true" type="bigint">
-                <constraints primaryKey="true" primaryKeyName="pk_employees_profiles_organizations" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="pk_users_organizations" nullable="false"/>
             </column>
             <column name="organization_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="employee_profile_id" type="bigint">
+            <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addUniqueConstraint tableName="employees_profiles_organizations" columnNames="organization_id, employee_profile_id"
-                             constraintName="uk_employees_profiles_organizations_organization_id_employee_profile_id"/>
-        <addForeignKeyConstraint baseTableName="employees_profiles_organizations" baseColumnNames="organization_id"
-                                 constraintName="fk_employees_profiles_organizations_organization_id"
+        <addUniqueConstraint tableName="users_organizations" columnNames="organization_id, user_id"
+                             constraintName="uk_users_organizations_organization_id_user_id"/>
+        <addForeignKeyConstraint baseTableName="users_organizations" baseColumnNames="organization_id"
+                                 constraintName="fk_users_organizations_organization_id"
                                  referencedTableName="organizations"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="employees_profiles_organizations" baseColumnNames="employee_profile_id"
-                                 constraintName="fk_employees_profiles_organizations_employee_profile_id"
-                                 referencedTableName="employees_profiles"
+        <addForeignKeyConstraint baseTableName="users_organizations" baseColumnNames="user_id"
+                                 constraintName="fk_users_organizations_user_id"
+                                 referencedTableName="users"
                                  referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

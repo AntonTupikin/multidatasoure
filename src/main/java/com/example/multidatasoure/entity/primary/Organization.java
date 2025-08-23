@@ -41,7 +41,7 @@ public class Organization {
     @JoinColumn(nullable = false)
     @ManyToOne
     @ToString.Exclude
-    private User user;
+    private User owner;
 
     @Column(nullable = false, unique = true)
     private Long inn;
@@ -51,12 +51,12 @@ public class Organization {
 
     // сотрудники организации
     @ManyToMany
-    @JoinTable( name = "employees_profiles_organizations",
+    @JoinTable( name = "users_organizations",
             joinColumns = {@JoinColumn(name = "organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "employee_profile_id")})
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     @Builder.Default
     @ToString.Exclude
-    private List<EmployeeProfile> employeesProfiles = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {

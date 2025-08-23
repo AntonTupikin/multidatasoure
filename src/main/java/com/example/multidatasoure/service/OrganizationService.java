@@ -1,42 +1,38 @@
 package com.example.multidatasoure.service;
 
 import com.example.multidatasoure.controller.request.OrganizationCreateRequest;
-import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.exception.ConflictException;
 import com.example.multidatasoure.exception.NotFoundException;
-import com.example.multidatasoure.repository.primary.EmployeeProfileRepository;
 import com.example.multidatasoure.repository.primary.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final UserService userService;
-    private final EmployeeProfileRepository employeeProfileRepository;
-    private final EmployeeService employeeService;
 
-    public void setEmployees(Organization organization, List<Long> employees, User user) {
-        List<EmployeeProfile> users = employees.stream().map(employee -> employeeService.getByIdAndUser(employee, user)).toList();
-        organization.setEmployeesProfiles(users);
+    public void setEmployees(Organization organization, List<Long> employeesIds, User user) {
+        List<User> users = employeesIds.stream().map(employee -> userService.findByIdAndSupervisorId(employee,user.getId())).collect(Collectors.toList());
+        organization.setUsers(users);
     }
 
     public List<Organization> getAllByUserAndEmployee(User owner, User employee) {
-        EmployeeProfile profile = employee.getEmployeeProfile();
-        return organizationRepository.findAllByUserAndEmployeesProfilesContains(owner, profile);
+        return organizationRepository.findAllByOwnerAndUsersContains(owner, employee);
     }
 
     public List<Organization> getAllByUser(User owner) {
-        return organizationRepository.findAllByUser(owner);
+        return organizationRepository.findAllByOwner(owner);
     }
 
     public Organization getByIdAndOwner(Long id, User owner) {
-        return organizationRepository.findByIdAndUser(id, owner)
+        return organizationRepository.findByIdAndOwner(id, owner)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.organization"));
     }
 
@@ -56,7 +52,7 @@ public class OrganizationService {
         Organization organization = new Organization();
         organization.setInn(organizationCreateRequest.inn());
         organization.setTitle(organizationCreateRequest.title());
-        organization.setUser(owner);
+        organization.setOwner(owner);
         return organizationRepository.save(organization);
     }
 

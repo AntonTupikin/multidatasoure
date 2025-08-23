@@ -1,6 +1,5 @@
 package com.example.multidatasoure.service;
 
-import com.example.multidatasoure.controller.request.AbstractEmployeeFilter;
 import com.example.multidatasoure.controller.request.UserCreateRequest;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.Role;
@@ -11,8 +10,6 @@ import com.example.multidatasoure.repository.primary.UserRepository;
 import com.example.multidatasoure.utils.FieldsUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,11 +50,6 @@ public class UserService {
 
     public User findByIdAndSupervisorId(Long id, Long supervisorId) {
         return userRepository.findByIdAndSupervisorId(id, supervisorId).orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
-    }
-
-    public Page<User> getAllByUser(User user, Pageable pageable, AbstractEmployeeFilter abstractEmployeeFilter) {
-        log.info(userRepository.findAll(abstractEmployeeFilter.getSpecification(user), pageable).toString());
-        return userRepository.findAll(abstractEmployeeFilter.getSpecification(user), pageable);
     }
 
     public User get(Principal principal) {
