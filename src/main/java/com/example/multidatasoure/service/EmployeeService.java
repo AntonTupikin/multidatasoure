@@ -1,5 +1,6 @@
 package com.example.multidatasoure.service;
 
+import com.example.multidatasoure.entity.primary.EmployeeOrganization;
 import com.example.multidatasoure.entity.primary.EmployeeProfile;
 import com.example.multidatasoure.entity.primary.Organization;
 import com.example.multidatasoure.entity.primary.User;
@@ -8,7 +9,6 @@ import com.example.multidatasoure.repository.primary.EmployeeProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -25,36 +25,30 @@ public class EmployeeService {
         return employeeProfile;
     }
 
-/*    public UserResponse update(User employee, Set<Long> organizationsIds) {
-        EmployeeProfile employeeProfile = employeeProfileRepository.findByUser(employee)
-                .orElseThrow(() -> new NotFoundException("message.exception.not-found.organization"));//TODO:переделать ошибку
 
-        Set<Organization> currentOrganizations = employeeProfile.getOrganizations();
-        Set<Long> existingIds = currentOrganizations.stream().map(Organization::getId).collect(Collectors.toSet());
-        Set<Organization>
-        // remove organizations whose ids are in organizationsIds
-        currentOrganizations.removeIf(org -> organizationsIds.contains(org.getId()));
+    public void setOrganizations(User employeeUser, Set<Long> organizationsIds) {
+        EmployeeProfile employee = employeeUser.getEmployeeProfile();
 
-        // add new organizations that were not previously associated
-        organizationsIds.stream()
-                .filter(id -> !existingIds.contains(id))
-                .forEach(id -> currentOrganizations.add(organizationService.getByIdAndOwner(id, employee.getSupervisor())));
+        // remove links that are no longer present
+        employee.getOrganizations().removeIf(link -> {
+            if (!organizationsIds.contains(link.getOrganization().getId())) {
+                link.getOrganization().getEmployees().remove(link);
+                return true;
+            }
+            return false;
+        });
 
-        employeeProfileRepository.save(employeeProfile);
-
-        return userMapper.toUserResponse(employee);
-    }*/
-
-    public void setOrganizations(User employee, Set<Long> organizationsIds) {
-        List<Organization> organizations = organizationsIds.stream()
-                .map(id -> organizationService.getByIdAndOwner(id, employee.getSupervisor()))
-                .toList();
-        // update employee memberships
-        employee.getOrganizations().clear();
-        employee.setOrganizations(organizations);
-        organizations.forEach(org -> {
-            if (!org.getEmployees().contains(employee.getEmployeeProfile())) {
-                org.getEmployees().add(employee.getEmployeeProfile());
+        // add new links
+        organizationsIds.forEach(id -> {
+            boolean exists = employee.getOrganizations().stream()
+                    .anyMatch(link -> link.getOrganization().getId().equals(id));
+            if (!exists) {
+                Organization org = organizationService.getByIdAndOwner(id, employeeUser.getSupervisor());
+                EmployeeOrganization link = new EmployeeOrganization();
+                link.setEmployee(employee);
+                link.setOrganization(org);
+                employee.getOrganizations().add(link);
+                org.getEmployees().add(link);
             }
         });
     }

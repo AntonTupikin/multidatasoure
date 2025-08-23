@@ -13,6 +13,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     boolean existsByTitle(String title);
     Optional<Organization> findByIdAndUser(Long id, User owner);
     List<Organization> findAllByUser(User owner);
-    List<Organization> findAllByUserAndEmployeesContains(User user, EmployeeProfile employee);
+    List<Organization> findAllByUserAndEmployeesEmployee(User user, EmployeeProfile employee);
 
 }
