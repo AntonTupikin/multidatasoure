@@ -19,12 +19,12 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final UserService userService;
 
-    public Organization setEmployees(Organization organization, List<Long> employees, User user){
+    public void setEmployees(Organization organization, List<Long> employees, User user){
         List<EmployeeProfile> users = new ArrayList<>();
         employees.forEach(e->users.add(userService.findByIdAndSupervisorId(e,user.getId()).getEmployeeProfile()));
         organization.setEmployees(users);
-        return organization;
     }
+
     public List<Organization> getAllByUserAndEmployee(User owner, User employee){
         EmployeeProfile profile = employee.getEmployeeProfile();
         return organizationRepository.findAllByUserAndEmployeesContains(owner, profile);
