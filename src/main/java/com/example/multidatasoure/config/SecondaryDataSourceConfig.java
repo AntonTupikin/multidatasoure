@@ -35,13 +35,20 @@ public class SecondaryDataSourceConfig {
     }
 
     @Bean
-      public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactory() {
-          LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-          emf.setDataSource(secondaryDataSource());
-          emf.setPackagesToScan("com.example.multidatasoure.entity.secondary");
-          emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-          return emf;
-      }
+    public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+        emf.setDataSource(secondaryDataSource());
+        emf.setPackagesToScan("com.example.multidatasoure.entity.secondary");
+        emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        // Align Hibernate naming with Spring Boot defaults (snake_case)
+        java.util.Properties jpaProps = new java.util.Properties();
+        jpaProps.put("hibernate.physical_naming_strategy",
+                "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
+        jpaProps.put("hibernate.implicit_naming_strategy",
+                "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
+        emf.setJpaProperties(jpaProps);
+        return emf;
+    }
 
       @Bean
       public SpringLiquibase secondaryLiquibase() {
