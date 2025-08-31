@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        logicalFilePath="db/changelog/2025-08-31-19-46-00-changelog.xml">
+
+    <changeSet id="2025-08-31-19-46-00-changelog" author="antontupikin" failOnError="true">
+        <comment>Convert single employee assignment to many-to-many</comment>
+
+        <!-- Create link table -->
+        <createTable tableName="project_employees">
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="project_employees" columnNames="project_id, user_id"
+                             constraintName="uk_project_employees_project_user"/>
+        <createIndex tableName="project_employees" indexName="i_project_employees_project_id">
+            <column name="project_id"/>
+        </createIndex>
+        <createIndex tableName="project_employees" indexName="i_project_employees_user_id">
+            <column name="user_id"/>
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="project_employees" baseColumnNames="project_id"
+                                 referencedTableName="projects" referencedColumnNames="id"
+                                 constraintName="fk_project_employees_project" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="project_employees" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_project_employees_user" onDelete="CASCADE"/>
+
+        <!-- Migrate existing single employee to link table if column exists -->
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="projects" columnName="employee_id"/>
+        </preConditions>
+        <sql>
+            INSERT INTO project_employees(project_id, user_id)
+            SELECT id, employee_id FROM projects WHERE employee_id IS NOT NULL;
+        </sql>
+        <dropForeignKeyConstraint baseTableName="projects" constraintName="fk_projects_on_employee"/>
+        <dropIndex tableName="projects" indexName="i_projects_employee_id"/>
+        <dropColumn tableName="projects" columnName="employee_id"/>
+    </changeSet>
+
+</databaseChangeLog>
+

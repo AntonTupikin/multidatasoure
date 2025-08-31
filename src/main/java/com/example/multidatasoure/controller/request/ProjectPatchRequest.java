@@ -1,8 +1,10 @@
 package com.example.multidatasoure.controller.request;
 
+import java.util.List;
+
 /**
  * Частичное обновление проекта.
- * Сейчас поддерживается назначение/снятие работника (employee).
+ * Поддерживается назначение списка работников (employees).
+ * Если список null — считаем, что нужно очистить назначения.
  */
-public record ProjectPatchRequest(Long employeeId) {}
-
+public record ProjectPatchRequest(List<Long> employeeIds) {}

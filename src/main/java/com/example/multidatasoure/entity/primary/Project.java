@@ -54,11 +54,14 @@ public class Project {
     @ToString.Exclude
     private Client client;
 
-    // Сотрудник (работник), назначенный на проект. Необязательный.
-    @JoinColumn(name = "employee_id")
-    @ManyToOne
+    // Работники, назначенные на проект (многие-ко-многим)
+    @ManyToMany
+    @JoinTable(name = "project_employees",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Builder.Default
     @ToString.Exclude
-    private User employee;
+    private java.util.List<User> employees = new java.util.ArrayList<>();
 
     @Column(name = "start_date") // имя колонки как в миграции
     private OffsetDateTime startDate;

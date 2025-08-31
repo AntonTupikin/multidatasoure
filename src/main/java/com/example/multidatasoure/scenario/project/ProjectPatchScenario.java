@@ -25,15 +25,17 @@ public class ProjectPatchScenario {
         log.info("Patch project {} by user {} with {}", projectId, userId, request);
         User user = userService.findById(userId);
         Project project = projectService.getByIdAndUser(projectId, user);
-        if (request.employeeId() == null) {
-            project.setEmployee(null);
+        var ids = request.employeeIds();
+        if (ids == null || ids.isEmpty()) {
+            project.getEmployees().clear();
         } else {
-            // Работник должен быть подчиненным (employee) текущего пользователя
-            User employee = userService.findByIdAndSupervisorId(request.employeeId(), user.getId());
-            project.setEmployee(employee);
+            // Все работники должны быть подчиненными текущего пользователя
+            java.util.List<User> employees = ids.stream()
+                    .map(id -> userService.findByIdAndSupervisorId(id, user.getId()))
+                    .toList();
+            project.setEmployees(employees);
         }
         Project saved = projectService.save(project);
         return projectMapper.toProjectResponse(saved);
     }
 }
-
