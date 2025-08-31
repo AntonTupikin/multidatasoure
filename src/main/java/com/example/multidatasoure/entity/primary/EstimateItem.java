@@ -68,6 +68,13 @@ public class EstimateItem {
     @Column
     private Integer positionNo;
 
+    /**
+     * Контрагент, поставщик/исполнитель, связанный с позицией.
+     */
+    @ManyToOne
+    @JoinColumn(name = "business_partner_id")
+    private BusinessPartner businessPartner;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o)

@@ -13,6 +13,7 @@ public record EstimateItemResponse(
         BigDecimal unitPrice,
         String category,
         Integer positionNo,
-        BigDecimal total
+        BigDecimal total,
+        Long businessPartnerId,
+        String businessPartnerName
 ) {}
-

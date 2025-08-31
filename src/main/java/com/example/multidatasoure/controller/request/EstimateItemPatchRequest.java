@@ -11,6 +11,6 @@ public record EstimateItemPatchRequest(
         BigDecimal quantity,
         BigDecimal unitPrice,
         String category,
-        Integer positionNo
+        Integer positionNo,
+        Long businessPartnerId
 ) {}
-

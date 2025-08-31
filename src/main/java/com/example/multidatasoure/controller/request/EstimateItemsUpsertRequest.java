@@ -17,7 +17,7 @@ public record EstimateItemsUpsertRequest(@Valid @Size(min = 1) List<EstimateUpse
             java.math.BigDecimal quantity,
             java.math.BigDecimal unitPrice,
             String category,
-            Integer positionNo
+            Integer positionNo,
+            Long businessPartnerId
     ) {}
 }
-

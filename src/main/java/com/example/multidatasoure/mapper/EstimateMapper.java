@@ -21,6 +21,8 @@ public interface EstimateMapper {
     }
 
     @Mapping(target = "total", expression = "java(calcTotal(entity.getQuantity(), entity.getUnitPrice()))")
+    @Mapping(target = "businessPartnerId", source = "businessPartner.id")
+    @Mapping(target = "businessPartnerName", source = "businessPartner.name")
     EstimateItemResponse toItemResponse(EstimateItem entity);
 
     default BigDecimal calcTotal(BigDecimal q, BigDecimal p) {
@@ -28,4 +30,3 @@ public interface EstimateMapper {
         return p.multiply(q);
     }
 }
-

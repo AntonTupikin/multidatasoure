@@ -18,6 +18,6 @@ public record EstimateItemCreateRequest(
         BigDecimal unitPrice,
         @Size(max = 100)
         String category,
-        Integer positionNo
+        Integer positionNo,
+        Long businessPartnerId
 ) {}
-
