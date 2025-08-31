@@ -4,16 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
-        logicalFilePath="db/changelog/2025-09-01-00-00-00-estimates.xml">
-
-    <!--
-      Сметы и позиции смет.
-      - У каждого проекта может быть только одна смета (UNIQUE(project_id))
-      - Позиции сметы (строительный материал): цена, количество, ед. измерения и пр.
-      - Индексы на FK, каскадное удаление
-    -->
-
-    <changeSet id="2025-09-01-00-00-00-create-estimates" author="codex" failOnError="true">
+        logicalFilePath="db/changelog/2025-08-31-14-52-00-changelog.xml.xml">
+    <changeSet id="2025-08-31-14-52-00-changelog.xml" author="antontupikin" failOnError="true">
         <!-- Таблица смет -->
         <createTable tableName="estimates">
             <column name="id" type="BIGINT" autoIncrement="true">

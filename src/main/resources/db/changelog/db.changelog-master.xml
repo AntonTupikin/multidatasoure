@@ -8,6 +8,6 @@
     <include file="db/changelog/2025-08-23-00-00-00-changelog.xml"/>
     <include file="db/changelog/2025-08-28-23-56-18-changelog.xml"/>
     <!-- Ченджлог смет и позиций смет -->
-    <include file="db/changelog/2025-09-01-00-00-00-estimates.xml"/>
+    <include file="/db/changelog/2025-08-31-14-52-00-changelog.xml"/>
 
 </databaseChangeLog>
