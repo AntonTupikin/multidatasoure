@@ -54,6 +54,12 @@ public class Project {
     @ToString.Exclude
     private Client client;
 
+    // Сотрудник (работник), назначенный на проект. Необязательный.
+    @JoinColumn(name = "employee_id")
+    @ManyToOne
+    @ToString.Exclude
+    private User employee;
+
     @Column(name = "start_date") // имя колонки как в миграции
     private OffsetDateTime startDate;
 
