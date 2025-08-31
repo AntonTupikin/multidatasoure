@@ -47,7 +47,6 @@ public class Client {
     @Column
     private String email;
 
-    @JoinColumn(unique = true, nullable = false)
     @OneToOne(mappedBy = "client")
     @ToString.Exclude
     private ClientProfile clientProfile;

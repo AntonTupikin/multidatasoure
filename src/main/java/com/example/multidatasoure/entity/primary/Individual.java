@@ -28,7 +28,7 @@ public class Individual extends ClientProfile{
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 12)
     private String inn;
 
     @Column

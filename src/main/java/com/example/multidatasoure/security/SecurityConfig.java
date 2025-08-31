@@ -20,9 +20,6 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    private static final String[] EMPLOYEE_URLs = {
-            "/api/employees/**",
-    };
     private static final String[] SUPERVISOR_URLs = {
             "/api/**"
     };
@@ -39,6 +36,9 @@ public class SecurityConfig {
             "/api/login",
             "/api/register"
 
+    };
+    private static final String[] EMPLOYEE_URLs = {
+            "/api/employees/**",
     };
 
     private static final String[] SWAGGER_URLs = {

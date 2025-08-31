@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
-        logicalFilePath="db/changelog/2025-08-31-00-00-00-changelog.xml">
+        logicalFilePath="db/changelog/2025-08-23-00-00-00-changelog.xml">
     <changeSet id="2025-08-31-00-00-00-changelog" author="antontupikin" failOnError="true">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">

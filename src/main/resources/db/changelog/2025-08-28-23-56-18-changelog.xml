@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
-        logicalFilePath="db/changelog/2025-09-01-12-00-00-changelog.xml">
+        logicalFilePath="db/changelog/2025-08-28-23-56-18-changelog.xml">
     <changeSet id="2025-09-01-12-00-00-changelog" author="antontupikin" failOnError="true">
         <comment>Add clients table</comment>
         <createTable tableName="clients">
@@ -47,7 +47,8 @@
                              tableName="client_profile"/>
         <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_profile"
                                  constraintName="fk_clientprofile_on_client" referencedColumnNames="id"
-                                 referencedTableName="clients"/>
+                                 referencedTableName="clients"
+                                 onDelete="CASCADE"/>
         <comment>Add individual_client_profiles table</comment>
         <createTable tableName="individuals">
             <column name="id" type="BIGINT">

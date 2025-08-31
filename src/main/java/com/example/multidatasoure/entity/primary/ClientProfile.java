@@ -10,6 +10,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +19,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "client_profile")
 @DiscriminatorColumn(name = "profile_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class ClientProfile {
     @Id

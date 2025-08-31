@@ -1,7 +1,6 @@
 package com.example.multidatasoure.config;
 
-import javax.sql.DataSource;
-
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,7 +12,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import liquibase.integration.spring.SpringLiquibase;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories(
@@ -40,13 +41,11 @@ public class SecondaryDataSourceConfig {
         emf.setDataSource(secondaryDataSource());
         emf.setPackagesToScan("com.example.multidatasoure.entity.secondary");
         emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        // Align Hibernate naming with Spring Boot defaults (snake_case)
-        java.util.Properties jpaProps = new java.util.Properties();
-        jpaProps.put("hibernate.physical_naming_strategy",
-                "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
-        jpaProps.put("hibernate.implicit_naming_strategy",
-                "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
-        emf.setJpaProperties(jpaProps);
+        Map<String, Object> props = new HashMap<>();
+        props.put("hibernate.physical_naming_strategy",
+                "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
+        props.put("hibernate.implicit_naming_strategy",
+                "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl");
         return emf;
     }
 
