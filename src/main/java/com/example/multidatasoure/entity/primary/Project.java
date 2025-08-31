@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,6 +62,11 @@ public class Project {
 
     //отсканированная pdf договора.
     // потом генерация договора с фл
+
+    // Смета проекта. У каждого проекта может быть максимум одна смета.
+    @OneToOne(mappedBy = "project")
+    @ToString.Exclude
+    private Estimate estimate;
 
     @Override
     public final boolean equals(Object o) {

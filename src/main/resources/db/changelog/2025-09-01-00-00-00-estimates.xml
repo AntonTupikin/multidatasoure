@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        logicalFilePath="db/changelog/2025-09-01-00-00-00-estimates.xml">
+
+    <!--
+      Сметы и позиции смет.
+      - У каждого проекта может быть только одна смета (UNIQUE(project_id))
+      - Позиции сметы (строительный материал): цена, количество, ед. измерения и пр.
+      - Индексы на FK, каскадное удаление
+    -->
+
+    <changeSet id="2025-09-01-00-00-00-create-estimates" author="codex" failOnError="true">
+        <!-- Таблица смет -->
+        <createTable tableName="estimates">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_estimates"/>
+            </column>
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Краткое название/заголовок сметы -->
+            <column name="title" type="VARCHAR(255)"/>
+            <!-- Валюта сметы, по умолчанию RUB -->
+            <column name="currency" type="VARCHAR(3)" defaultValue="RUB">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Произвольные заметки по смете -->
+            <column name="notes" type="TEXT"/>
+        </createTable>
+        <addUniqueConstraint tableName="estimates" columnNames="project_id" constraintName="uk_estimates_project"/>
+        <addForeignKeyConstraint baseTableName="estimates" baseColumnNames="project_id"
+                                 referencedTableName="projects" referencedColumnNames="id"
+                                 constraintName="fk_estimates_project" onDelete="CASCADE"/>
+        <createIndex tableName="estimates" indexName="i_estimates_project_id">
+            <column name="project_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2025-09-01-00-00-10-create-estimate-items" author="codex" failOnError="true">
+        <!-- Позиции сметы (строительные материалы) -->
+        <createTable tableName="estimate_items">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_estimate_items"/>
+            </column>
+            <column name="estimate_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Наименование материала/работы -->
+            <column name="material_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Единица измерения, напр. шт, м2, кг -->
+            <column name="unit" type="VARCHAR(50)"/>
+            <!-- Количество с возможной дробной частью -->
+            <column name="quantity" type="NUMERIC(19,3)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Цена за единицу -->
+            <column name="unit_price" type="NUMERIC(19,2)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Категория/раздел сметы -->
+            <column name="category" type="VARCHAR(100)"/>
+            <!-- Порядковый номер позиции внутри сметы -->
+            <column name="position_no" type="INT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="estimate_items" baseColumnNames="estimate_id"
+                                 referencedTableName="estimates" referencedColumnNames="id"
+                                 constraintName="fk_estimate_items_estimate" onDelete="CASCADE"/>
+        <createIndex tableName="estimate_items" indexName="i_estimate_items_estimate_id">
+            <column name="estimate_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+
