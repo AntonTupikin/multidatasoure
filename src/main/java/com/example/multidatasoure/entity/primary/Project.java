@@ -41,7 +41,7 @@ public class Project {
     private String title;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "project_status", nullable = false) // имя колонки как в миграции
     private ProjectStatus projectStatus;
 
     @JoinColumn(nullable = false)
@@ -54,10 +54,10 @@ public class Project {
     @ToString.Exclude
     private Client client;
 
-    @Column
+    @Column(name = "start_date") // имя колонки как в миграции
     private OffsetDateTime startDate;
 
-    @Column
+    @Column(name = "end_date") // имя колонки как в миграции
     private OffsetDateTime endDate;
 
     //отсканированная pdf договора.
