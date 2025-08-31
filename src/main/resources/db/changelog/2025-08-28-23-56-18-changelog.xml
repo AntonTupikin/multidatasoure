@@ -20,6 +20,12 @@
         <createIndex tableName="clients" indexName="i_clients_user_id">
             <column name="user_id"/>
         </createIndex>
+        <addUniqueConstraint tableName="clients"
+                             columnNames="user_id, email"
+                             constraintName="uk_clients_user_email"/>
+        <addUniqueConstraint tableName="clients"
+                             columnNames="user_id, phone"
+                             constraintName="uk_clients_user_phone"/>
         <addForeignKeyConstraint baseTableName="clients" baseColumnNames="user_id"
                                  constraintName="fk_clients_user_id"
                                  referencedTableName="users"
@@ -36,9 +42,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createIndex tableName="client_profile" indexName="i_client_profiles_client_id">
-            <column name="client_id"/>
-        </createIndex>
+
         <addUniqueConstraint columnNames="client_id" constraintName="uk_clientprofile_client"
                              tableName="client_profile"/>
         <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_profile"
@@ -55,8 +59,8 @@
             <column name="last_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="inn" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+            <column name="inn" type="VARCHAR(12)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uc_individuals_inn"/>
             </column>
             <column name="bank_account" type="VARCHAR(255)"/>
         </createTable>
@@ -85,6 +89,12 @@
         <createIndex tableName="projects" indexName="i_projects_organization_id">
             <column name="organization_id"/>
         </createIndex>
+        <createIndex tableName="projects" indexName="i_projects_client_id">
+            <column name="client_id"/>
+        </createIndex>
+        <addUniqueConstraint tableName="projects"
+                             columnNames="organization_id, title"
+                             constraintName="uk_projects_org_title"/>
         <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="projects"
                                  constraintName="fk_projects_on_client" referencedColumnNames="id"
                                  referencedTableName="clients"/>
