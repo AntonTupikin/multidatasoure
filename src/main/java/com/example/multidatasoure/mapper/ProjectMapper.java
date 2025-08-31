@@ -15,4 +15,8 @@ public interface ProjectMapper {
     default OffsetDateTime toOffsetDateTime(Instant instant) {
         return instant.atOffset(ZoneOffset.UTC);
     }
+
+    default Instant toInstant(OffsetDateTime offsetDateTime) {
+        return offsetDateTime.toInstant();
+    }
 }

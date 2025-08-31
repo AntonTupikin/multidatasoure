@@ -3,7 +3,6 @@ package com.example.multidatasoure.controller;
 import com.example.multidatasoure.controller.request.ProjectCreateRequest;
 import com.example.multidatasoure.controller.request.ProjectFilter;
 import com.example.multidatasoure.controller.response.ProjectResponse;
-import com.example.multidatasoure.controller.response.UserResponse;
 import com.example.multidatasoure.scenario.project.ProjectCreateScenario;
 import com.example.multidatasoure.scenario.project.ProjectDeleteScenario;
 import com.example.multidatasoure.scenario.project.ProjectGetScenario;
@@ -50,7 +49,7 @@ public class ProjectController {
             security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/projects/{id}")
-    public UserResponse getInfo(Principal principal, @PathVariable Long id) {
+    public ProjectResponse getInfo(Principal principal, @PathVariable Long id) {
         return projectGetScenario.get(userService.get(principal).getId(), id);
     }
 
