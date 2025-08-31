@@ -26,6 +26,12 @@ public class UserGetScenario {
     }
 
     @Transactional(readOnly = true)
+    public UserResponse getById(Long id, Long supervisorId) {
+        User user = userService.findByIdAndSupervisorId(id,supervisorId);
+        return userMapper.toUserResponse(user);
+    }
+
+    @Transactional(readOnly = true)
     public Page<UserResponse> getAllByUser(Long userId, Pageable pageable, UserFilter userFilter) {
         log.info("Get employees for user. {}. {}.", pageable, userFilter);
         Page<User> users = userService.getAllByUser(userService.findById(userId), pageable, userFilter);
