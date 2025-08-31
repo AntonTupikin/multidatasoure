@@ -44,8 +44,18 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users")
     public Page<UserResponse> getAll(Principal principal, @ParameterObject Pageable pageable, @ParameterObject UserFilter userFilter) {
-        return userGetScenario.getAllByUser(userService.get(principal).getId(), pageable,userFilter);
+        return userGetScenario.getAllByUser(userService.get(principal).getId(), pageable, userFilter);
     }
+
+    @Operation(
+            summary = "Получение пользователя по id",
+            security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/{id}")
+    public UserResponse getInfo(@PathVariable Long id, Principal principal) {
+        return userGetScenario.getById(id, userService.get(principal).getId());
+    }
+
 
     @Operation(
             summary = "Получение информации о пользователе",
@@ -80,7 +90,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/users/employees")
     public UserResponse createEmployee(@RequestBody UserCreateRequest request, Principal principal) {
-        return userCreateScenario.createEmployee(request,userService.get(principal).getId());
+        return userCreateScenario.createEmployee(request, userService.get(principal).getId());
     }
 
 }

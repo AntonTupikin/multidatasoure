@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneOffset;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -52,5 +53,9 @@ public class ProjectService {
 
     public Project save(Project project) {
         return projectRepository.save(project);
+    }
+
+    public void setEmployees(Project project, List<User> employees, User user) {
+        project.setEmployees(employees);
     }
 }
