@@ -1,9 +1,11 @@
 package com.example.multidatasoure.mapper;
 
+import com.example.multidatasoure.controller.response.EstimateItemHistoryResponse;
 import com.example.multidatasoure.controller.response.EstimateItemResponse;
 import com.example.multidatasoure.controller.response.EstimateResponse;
 import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.EstimateItem;
+import com.example.multidatasoure.entity.primary.EstimateItemHistory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -24,6 +26,10 @@ public interface EstimateMapper {
     @Mapping(target = "businessPartnerId", source = "businessPartner.id")
     @Mapping(target = "businessPartnerName", source = "businessPartner.name")
     EstimateItemResponse toItemResponse(EstimateItem entity);
+
+    @Mapping(target = "changedBy", source = "changedBy.id")
+    @Mapping(target = "changedByUsername", source = "changedBy.username")
+    EstimateItemHistoryResponse toItemHistoryResponse(EstimateItemHistory entity);
 
     default BigDecimal calcTotal(BigDecimal q, BigDecimal p) {
         if (q == null || p == null) return BigDecimal.ZERO;

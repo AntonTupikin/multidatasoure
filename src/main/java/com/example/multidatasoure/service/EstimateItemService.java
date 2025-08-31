@@ -174,6 +174,7 @@ public class EstimateItemService {
                         h.getId(),
                         item.getId(),
                         h.getChangedBy() == null ? null : h.getChangedBy().getId(),
+                        h.getChangedBy() == null ? null : h.getChangedBy().getUsername(),
                         h.getChangedAt(),
                         h.getOldUnit(),
                         h.getNewUnit(),

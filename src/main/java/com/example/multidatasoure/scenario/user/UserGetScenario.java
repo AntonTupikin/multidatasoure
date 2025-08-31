@@ -27,6 +27,9 @@ public class UserGetScenario {
 
     @Transactional(readOnly = true)
     public UserResponse getById(Long id, Long supervisorId) {
+        if(id.equals(supervisorId)){
+            return userMapper.toUserResponse(userService.findById(supervisorId));
+        }
         User user = userService.findByIdAndSupervisorId(id,supervisorId);
         return userMapper.toUserResponse(user);
     }
