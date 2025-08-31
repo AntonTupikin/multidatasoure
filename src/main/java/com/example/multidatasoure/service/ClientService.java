@@ -10,6 +10,7 @@ import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.ClientRepository;
 import com.example.multidatasoure.repository.primary.IndividualRepository;
 import lombok.RequiredArgsConstructor;
+import com.example.multidatasoure.utils.FieldsUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,14 +28,22 @@ public class ClientService {
 
     @Transactional
     public Client create(ClientCreateRequest request, User user) {
-        if (clientRepository.existsByUserAndPhone(user, request.phone())) {
+        // Normalize inputs before checks and persistence
+        String email = FieldsUtils.normalizeEmail(request.email());
+        String phone = FieldsUtils.normalizePhone(request.phone());
+
+        // Duplicate checks
+        if (clientRepository.existsByUserAndEmailIgnoreCase(user, email)) {
+            throw new ConflictException("message.exception.conflict.client.email", email);
+        }
+        if (clientRepository.existsByUserAndPhone(user, phone)) {
             throw new ConflictException("message.exception.conflict.client.phone", request.phone());
         }
 
         Client client = Client.builder()
                 .user(user)
-                .phone(request.phone())
-                .email(request.email())
+                .phone(phone)
+                .email(email)
                 .build();
         client = clientRepository.save(client);
 
