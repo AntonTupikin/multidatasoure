@@ -40,7 +40,8 @@ public class Organization {
     private Long id;
 
     // владелец организации
-    @JoinColumn(nullable = false)
+    // В БД колонка называется user_id, поэтому явно задаем name
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
     @ToString.Exclude
     private User owner;
