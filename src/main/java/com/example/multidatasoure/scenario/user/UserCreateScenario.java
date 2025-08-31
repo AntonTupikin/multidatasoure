@@ -26,4 +26,12 @@ public class UserCreateScenario {
         //registrationRequestService.updateRegistrationRequest(user);
         return userMapper.toUserResponse(user);
     }
+
+    @Transactional
+    public UserResponse createEmployee(UserCreateRequest request, Long userId) {
+        log.info("Create employee for user %d start".formatted(userId));
+        User user = userService.findById(userId);
+        return userMapper.toUserResponse(userService.save(request, Role.SUPERVISOR, user));
+        //PasswordResetToken passwordResetToken = authenticationService.createPasswordResetTokenForUser(user);
+    }
 }
