@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        logicalFilePath="db/changelog/2025-09-01-12-00-00-changelog.xml">
+    <changeSet id="2025-09-01-12-00-00-changelog" author="antontupikin" failOnError="true">
+        <comment>Add clients table</comment>
+        <createTable tableName="clients">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_clients"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+        </createTable>
+        <createIndex tableName="clients" indexName="i_clients_user_id">
+            <column name="user_id"/>
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="clients" baseColumnNames="user_id"
+                                 constraintName="fk_clients_user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <comment>Add client_profiles table</comment>
+        <createTable tableName="client_profile">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_clientprofile"/>
+            </column>
+            <column name="profile_type" type="VARCHAR(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="client_profile" indexName="i_client_profiles_client_id">
+            <column name="client_id"/>
+        </createIndex>
+        <addUniqueConstraint columnNames="client_id" constraintName="uk_clientprofile_client"
+                             tableName="client_profile"/>
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_profile"
+                                 constraintName="fk_clientprofile_on_client" referencedColumnNames="id"
+                                 referencedTableName="clients"/>
+        <comment>Add individual_client_profiles table</comment>
+        <createTable tableName="individuals">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_individuals"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="inn" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_account" type="VARCHAR(255)"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="individuals" constraintName="FK_INDIVIDUALS_ON_ID"
+                                 referencedColumnNames="id" referencedTableName="client_profile"/>
+
+        <createTable tableName="projects">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_projects"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organization_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="timestamp"/>
+            <column name="end_date" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="projects" indexName="i_projects_organization_id">
+            <column name="organization_id"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="projects"
+                                 constraintName="fk_projects_on_client" referencedColumnNames="id"
+                                 referencedTableName="clients"/>
+        <addForeignKeyConstraint baseColumnNames="organization_id" baseTableName="projects"
+                                 constraintName="fk_projects_on_organization" referencedColumnNames="id"
+                                 referencedTableName="organizations"/>
+    </changeSet>
+</databaseChangeLog>

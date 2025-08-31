@@ -1,16 +1,14 @@
 package com.example.multidatasoure.entity.primary;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,61 +16,46 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@ToString
 @Getter
 @Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "organizations")
-@FieldNameConstants
-public class Organization {
+@NoArgsConstructor
+@Table(name = "clients")
+@AllArgsConstructor
+public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    // владелец организации
     @JoinColumn(nullable = false)
     @ManyToOne
     @ToString.Exclude
-    private User owner;
+    private User user;
 
-    @Column(nullable = false, unique = true)
-    private Long inn;
+    @Column
+    private String phone;
 
-    @Column(nullable = false)
-    private String title;
+    @Column
+    private String email;
 
-/*    // клиенты организации
-    @ManyToMany
-    @JoinTable(name = "clients_organizations",
-            joinColumns = {@JoinColumn(name = "organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "clients_id")})
+    @JoinColumn(unique = true, nullable = false)
+    @OneToOne(mappedBy = "client")
+    @ToString.Exclude
+    private ClientProfile clientProfile;
+
+    @OneToMany(mappedBy = "client")
     @Builder.Default
     @ToString.Exclude
-    private List<Client> clients = new ArrayList<>();*/
-
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    @Builder.Default
     private List<Project> projects = new ArrayList<>();
-
-    // сотрудники организации
-    @ManyToMany
-    @JoinTable(name = "users_organizations",
-            joinColumns = {@JoinColumn(name = "organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    @Builder.Default
-    @ToString.Exclude
-    private List<User> users = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
@@ -81,8 +64,8 @@ public class Organization {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Organization that = (Organization) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        Client client = (Client) o;
+        return getId() != null && Objects.equals(getId(), client.getId());
     }
 
     @Override

@@ -19,7 +19,7 @@ public class UserGetScenario {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserResponse get(Long userId) {
         User user = userService.findById(userId);
         return userMapper.toUserResponse(user);
@@ -27,7 +27,7 @@ public class UserGetScenario {
 
     @Transactional(readOnly = true)
     public Page<UserResponse> getAllByUser(Long userId, Pageable pageable, UserFilter userFilter) {
-        log.info("Get calls for user. {}. {}.", pageable, userFilter);
+        log.info("Get employees for user. {}. {}.", pageable, userFilter);
         Page<User> users = userService.getAllByUser(userService.findById(userId), pageable, userFilter);
         return users.map(userMapper::toUserResponse);
     }

@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,9 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -64,6 +67,12 @@ public class User {
     @ToString.Exclude
     @Builder.Default
     private Set<Organization> organizations = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    @ToString.Exclude
+    private List<Client> clients = new ArrayList<>();
+
 
 /*    // связь с профилем супервизора (опциональная)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
