@@ -1,6 +1,7 @@
 package com.example.multidatasoure.controller;
 
 import com.example.multidatasoure.controller.request.ProjectCreateRequest;
+import com.example.multidatasoure.controller.request.ProjectPatchRequest;
 import com.example.multidatasoure.controller.request.ProjectFilter;
 import com.example.multidatasoure.controller.response.ProjectResponse;
 import com.example.multidatasoure.scenario.project.ProjectCreateScenario;
@@ -34,6 +35,7 @@ public class ProjectController {
     private final ProjectGetScenario projectGetScenario;
     private final UserService userService;
     private final ProjectDeleteScenario projectDeleteScenario;
+    private final com.example.multidatasoure.scenario.project.ProjectPatchScenario projectPatchScenario;
 
     @Operation(
             summary = "Получение всех проектов организации",
@@ -69,5 +71,15 @@ public class ProjectController {
     @DeleteMapping("/projects/{id}")
     public void delete(Principal principal, @PathVariable Long id) {
         projectDeleteScenario.delete(userService.get(principal).getId(), id);
+    }
+
+    @Operation(
+            summary = "Частичное обновление проекта (назначение работника)",
+            security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/projects/{id}")
+    public ProjectResponse patch(Principal principal, @PathVariable Long id,
+                                 @RequestBody ProjectPatchRequest request) {
+        return projectPatchScenario.patch(userService.get(principal).getId(), id, request);
     }
 }
