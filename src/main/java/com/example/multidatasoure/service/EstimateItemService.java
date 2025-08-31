@@ -52,6 +52,13 @@ public class EstimateItemService {
         estimateItemRepository.delete(item);
     }
 
+    public EstimateItem getItem(User user, Long estimateId, Long itemId) {
+        Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
+        return estimateItemRepository.findById(itemId)
+                .filter(i -> Objects.equals(i.getEstimate().getId(), estimate.getId()))
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
+    }
+
     /**
      * Частичное обновление позиции сметы по itemId. Меняются только непустые поля.
      */

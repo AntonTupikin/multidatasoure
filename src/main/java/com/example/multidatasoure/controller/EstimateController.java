@@ -30,6 +30,7 @@ public class EstimateController {
     private final EstimateItemDeleteScenario estimateItemDeleteScenario;
     private final EstimateItemPatchScenario estimateItemPatchScenario;
     private final EstimateItemsUpsertScenario estimateItemsUpsertScenario;
+    private final EstimateItemGetScenario estimateItemGetScenario;
     private final UserService userService;
     private final EstimateItemHistoryScenario estimateItemHistoryScenario;
 
@@ -68,6 +69,17 @@ public class EstimateController {
     @GetMapping("/estimates/{estimateId}/items")
     public List<EstimateItemResponse> listItems(Principal principal, @PathVariable Long estimateId) {
         return estimateGetScenario.listItems(userService.get(principal).getId(), estimateId);
+    }
+
+    @Operation(summary = "Получение позиции сметы с историей", security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/estimates/{estimateId}/items/{itemId}")
+    public com.example.multidatasoure.controller.response.EstimateItemWithHistoryResponse getItem(
+            Principal principal,
+            @PathVariable Long estimateId,
+            @PathVariable Long itemId
+    ) {
+        return estimateItemGetScenario.get(userService.get(principal).getId(), estimateId, itemId);
     }
 
     @Operation(summary = "Добавление позиции в смету", security = @SecurityRequirement(name = "bearer"))
