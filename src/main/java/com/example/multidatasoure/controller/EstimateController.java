@@ -31,6 +31,7 @@ public class EstimateController {
     private final EstimateItemPatchScenario estimateItemPatchScenario;
     private final EstimateItemsUpsertScenario estimateItemsUpsertScenario;
     private final UserService userService;
+    private final EstimateItemHistoryScenario estimateItemHistoryScenario;
 
     @Operation(summary = "Создание сметы для проекта", security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.CREATED)
@@ -101,5 +102,16 @@ public class EstimateController {
                                                  @PathVariable Long estimateId,
                                                  @RequestBody @Valid com.example.multidatasoure.controller.request.EstimateItemsUpsertRequest request) {
         return estimateItemsUpsertScenario.upsert(userService.get(principal).getId(), estimateId, request);
+    }
+
+    @Operation(summary = "История изменений позиции сметы", security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/estimates/{estimateId}/items/{itemId}/history")
+    public java.util.List<com.example.multidatasoure.controller.response.EstimateItemHistoryResponse> history(
+            Principal principal,
+            @PathVariable Long estimateId,
+            @PathVariable Long itemId
+    ) {
+        return estimateItemHistoryScenario.history(userService.get(principal).getId(), estimateId, itemId);
     }
 }

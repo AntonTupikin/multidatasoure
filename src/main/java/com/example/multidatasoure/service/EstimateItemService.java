@@ -5,9 +5,12 @@ import com.example.multidatasoure.controller.request.EstimateItemPatchRequest;
 import com.example.multidatasoure.controller.request.EstimateItemsUpsertRequest;
 import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.EstimateItem;
+import com.example.multidatasoure.entity.primary.EstimateItemHistory;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.exception.NotFoundException;
+import com.example.multidatasoure.repository.primary.EstimateItemHistoryRepository;
 import com.example.multidatasoure.repository.primary.EstimateItemRepository;
+import com.example.multidatasoure.controller.response.EstimateItemHistoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import java.util.Objects;
 public class EstimateItemService {
     private final EstimateItemRepository estimateItemRepository;
     private final EstimateService estimateService;
+    private final EstimateItemHistoryRepository estimateItemHistoryRepository;
 
     public EstimateItem addItem(User user, Long estimateId, EstimateItemCreateRequest request) {
         Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
@@ -56,13 +60,38 @@ public class EstimateItemService {
         EstimateItem item = estimateItemRepository.findById(itemId)
                 .filter(i -> Objects.equals(i.getEstimate().getId(), estimate.getId()))
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
+        // Capture old values to track changes
+        String oldUnit = item.getUnit();
+        var oldQuantity = item.getQuantity();
+        var oldUnitPrice = item.getUnitPrice();
+
         if (request.materialName() != null) item.setMaterialName(request.materialName());
         if (request.unit() != null) item.setUnit(request.unit());
         if (request.quantity() != null) item.setQuantity(request.quantity());
         if (request.unitPrice() != null) item.setUnitPrice(request.unitPrice());
         if (request.category() != null) item.setCategory(request.category());
         if (request.positionNo() != null) item.setPositionNo(request.positionNo());
-        return estimateItemRepository.save(item);
+        EstimateItem saved = estimateItemRepository.save(item);
+        // Write history if tracked fields changed
+        boolean changed =
+                !Objects.equals(oldUnit, saved.getUnit()) ||
+                !Objects.equals(oldQuantity, saved.getQuantity()) ||
+                !Objects.equals(oldUnitPrice, saved.getUnitPrice());
+        if (changed) {
+            EstimateItemHistory history = EstimateItemHistory.builder()
+                    .item(saved)
+                    .changedBy(user)
+                    .changedAt(java.time.Instant.now())
+                    .oldUnit(oldUnit)
+                    .newUnit(saved.getUnit())
+                    .oldQuantity(oldQuantity)
+                    .newQuantity(saved.getQuantity())
+                    .oldUnitPrice(oldUnitPrice)
+                    .newUnitPrice(saved.getUnitPrice())
+                    .build();
+            estimateItemHistoryRepository.save(history);
+        }
+        return saved;
     }
 
     /**
@@ -86,14 +115,59 @@ public class EstimateItemService {
                 EstimateItem existing = estimateItemRepository.findById(it.id())
                         .filter(i -> Objects.equals(i.getEstimate().getId(), estimate.getId()))
                         .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
+                String oldUnit = existing.getUnit();
+                var oldQuantity = existing.getQuantity();
+                var oldUnitPrice = existing.getUnitPrice();
+
                 if (it.materialName() != null) existing.setMaterialName(it.materialName());
                 if (it.unit() != null) existing.setUnit(it.unit());
                 if (it.quantity() != null) existing.setQuantity(it.quantity());
                 if (it.unitPrice() != null) existing.setUnitPrice(it.unitPrice());
                 if (it.category() != null) existing.setCategory(it.category());
                 if (it.positionNo() != null) existing.setPositionNo(it.positionNo());
-                return estimateItemRepository.save(existing);
+                EstimateItem saved = estimateItemRepository.save(existing);
+                boolean changed =
+                        !Objects.equals(oldUnit, saved.getUnit()) ||
+                        !Objects.equals(oldQuantity, saved.getQuantity()) ||
+                        !Objects.equals(oldUnitPrice, saved.getUnitPrice());
+                if (changed) {
+                    EstimateItemHistory history = EstimateItemHistory.builder()
+                            .item(saved)
+                            .changedBy(user)
+                            .changedAt(java.time.Instant.now())
+                            .oldUnit(oldUnit)
+                            .newUnit(saved.getUnit())
+                            .oldQuantity(oldQuantity)
+                            .newQuantity(saved.getQuantity())
+                            .oldUnitPrice(oldUnitPrice)
+                            .newUnitPrice(saved.getUnitPrice())
+                            .build();
+                    estimateItemHistoryRepository.save(history);
+                }
+                return saved;
             }
         }).toList();
+    }
+
+    public List<EstimateItemHistoryResponse> listItemHistory(User user, Long estimateId, Long itemId) {
+        Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
+        EstimateItem item = estimateItemRepository.findById(itemId)
+                .filter(i -> Objects.equals(i.getEstimate().getId(), estimate.getId()))
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
+        return estimateItemHistoryRepository.findAllByItemIdOrderByChangedAtDesc(item.getId())
+                .stream()
+                .map(h -> new EstimateItemHistoryResponse(
+                        h.getId(),
+                        item.getId(),
+                        h.getChangedBy() == null ? null : h.getChangedBy().getId(),
+                        h.getChangedAt(),
+                        h.getOldUnit(),
+                        h.getNewUnit(),
+                        h.getOldQuantity(),
+                        h.getNewQuantity(),
+                        h.getOldUnitPrice(),
+                        h.getNewUnitPrice()
+                ))
+                .toList();
     }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        logicalFilePath="db/changelog/2025-08-31-20-10-00-changelog.xml">
+
+    <changeSet id="2025-08-31-20-10-00-changelog" author="antontupikin" failOnError="true">
+        <comment>Create estimate_item_history table</comment>
+        <createTable tableName="estimate_item_history">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_estimate_item_history"/>
+            </column>
+            <column name="item_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_unit" type="VARCHAR(50)"/>
+            <column name="new_unit" type="VARCHAR(50)"/>
+            <column name="old_quantity" type="NUMERIC(19,3)"/>
+            <column name="new_quantity" type="NUMERIC(19,3)"/>
+            <column name="old_unit_price" type="NUMERIC(19,2)"/>
+            <column name="new_unit_price" type="NUMERIC(19,2)"/>
+        </createTable>
+        <createIndex tableName="estimate_item_history" indexName="i_estimate_item_history_item_id">
+            <column name="item_id"/>
+        </createIndex>
+        <createIndex tableName="estimate_item_history" indexName="i_estimate_item_history_changed_by">
+            <column name="changed_by"/>
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="estimate_item_history" baseColumnNames="item_id"
+                                 referencedTableName="estimate_items" referencedColumnNames="id"
+                                 constraintName="fk_estimate_item_history_item" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="estimate_item_history" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_estimate_item_history_user" onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
+
