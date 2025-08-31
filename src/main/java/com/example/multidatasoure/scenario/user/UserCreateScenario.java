@@ -29,9 +29,9 @@ public class UserCreateScenario {
 
     @Transactional
     public UserResponse createEmployee(UserCreateRequest request, Long userId) {
-        log.info("Create employee for user %d start".formatted(userId));
+        log.info("Create employee for user %d".formatted(userId));
         User user = userService.findById(userId);
-        return userMapper.toUserResponse(userService.save(request, Role.SUPERVISOR, user));
+        return userMapper.toUserResponse(userService.save(request, Role.EMPLOYEE, user));
         //PasswordResetToken passwordResetToken = authenticationService.createPasswordResetTokenForUser(user);
     }
 }

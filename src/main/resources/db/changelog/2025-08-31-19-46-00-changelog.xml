@@ -33,10 +33,6 @@
                                  referencedTableName="users" referencedColumnNames="id"
                                  constraintName="fk_project_employees_user" onDelete="CASCADE"/>
 
-        <!-- Migrate existing single employee to link table if column exists -->
-        <preConditions onFail="MARK_RAN">
-            <columnExists tableName="projects" columnName="employee_id"/>
-        </preConditions>
         <sql>
             INSERT INTO project_employees(project_id, user_id)
             SELECT id, employee_id FROM projects WHERE employee_id IS NOT NULL;

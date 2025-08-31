@@ -50,11 +50,11 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
+        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));//TODO
     }
 
     public User findByIdAndSupervisorId(Long id, Long supervisorId) {
-        return userRepository.findByIdAndSupervisorId(id, supervisorId).orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
+        return userRepository.findByIdAndSupervisorId(id, supervisorId).orElseThrow(() -> new UsernameNotFoundException("Employee with id %d for user %d not found: ".formatted(id, supervisorId)));
     }
 
     public User get(Principal principal) {
