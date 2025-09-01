@@ -43,5 +43,13 @@ public class EstimateCatalogItemService {
         Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
         return estimateCatalogItemRepository.findAllByEstimateOrderByPositionNoAscIdAsc(estimate);
     }
-}
 
+    public void delete(User user, Long estimateId, Long catalogItemId) {
+        Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
+        CatalogItem catalogItem = catalogItemRepository.findById(catalogItemId)
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.catalog-item"));
+        EstimateCatalogItem link = estimateCatalogItemRepository.findByEstimateAndCatalogItem(estimate, catalogItem)
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-catalog-item"));
+        estimateCatalogItemRepository.delete(link);
+    }
+}

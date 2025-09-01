@@ -35,6 +35,7 @@ public class EstimateController {
     private final EstimateItemHistoryScenario estimateItemHistoryScenario;
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemAddScenario estimateCatalogItemAddScenario;
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemListScenario estimateCatalogItemListScenario;
+    private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemDeleteScenario estimateCatalogItemDeleteScenario;
 
     @Operation(summary = "Создание сметы для проекта", security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.CREATED)
@@ -149,5 +150,16 @@ public class EstimateController {
             @PathVariable Long estimateId
     ) {
         return estimateCatalogItemListScenario.list(userService.get(principal).getId(), estimateId);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Удаление каталожной позиции из сметы", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
+    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.OK)
+    @org.springframework.web.bind.annotation.DeleteMapping("/estimates/{estimateId}/catalog-items/{catalogItemId}")
+    public void deleteCatalogItem(
+            Principal principal,
+            @PathVariable Long estimateId,
+            @PathVariable Long catalogItemId
+    ) {
+        estimateCatalogItemDeleteScenario.delete(userService.get(principal).getId(), estimateId, catalogItemId);
     }
 }
