@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        logicalFilePath="db/changelog/2025-09-01-22-59-00-changelog.xml">
+
+    <changeSet id="2025-09-01-22-59-00-create-catalog-items" author="codex" failOnError="true">
+        <comment>Create catalog_items table for global estimate positions</comment>
+        <createTable tableName="catalog_items">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_catalog_items"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="material_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit" type="VARCHAR(50)"/>
+            <column name="unit_price" type="NUMERIC(19,2)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(100)"/>
+            <column name="business_partner_id" type="BIGINT"/>
+        </createTable>
+        <createIndex tableName="catalog_items" indexName="i_catalog_items_user_id">
+            <column name="user_id"/>
+        </createIndex>
+        <createIndex tableName="catalog_items" indexName="i_catalog_items_user_name">
+            <column name="user_id"/>
+            <column name="material_name"/>
+        </createIndex>
+        <addForeignKeyConstraint baseTableName="catalog_items" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_catalog_items_user" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="catalog_items" baseColumnNames="business_partner_id"
+                                 referencedTableName="business_partners" referencedColumnNames="id"
+                                 constraintName="fk_catalog_items_business_partner" onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="2025-09-01-23-00-00-estimate-catalog-items-m2m" author="codex" failOnError="true">
+        <comment>Join table for estimates <-> catalog_items ManyToMany</comment>
+        <createTable tableName="estimate_catalog_items">
+            <column name="estimate_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="catalog_item_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="estimate_catalog_items" columnNames="estimate_id, catalog_item_id" constraintName="pk_estimate_catalog_items"/>
+        <addForeignKeyConstraint baseTableName="estimate_catalog_items" baseColumnNames="estimate_id"
+                                 referencedTableName="estimates" referencedColumnNames="id"
+                                 constraintName="fk_estimate_catalog_items_estimate" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="estimate_catalog_items" baseColumnNames="catalog_item_id"
+                                 referencedTableName="catalog_items" referencedColumnNames="id"
+                                 constraintName="fk_estimate_catalog_items_item" onDelete="CASCADE"/>
+        <createIndex tableName="estimate_catalog_items" indexName="i_estimate_catalog_items_estimate">
+            <column name="estimate_id"/>
+        </createIndex>
+        <createIndex tableName="estimate_catalog_items" indexName="i_estimate_catalog_items_item">
+            <column name="catalog_item_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+

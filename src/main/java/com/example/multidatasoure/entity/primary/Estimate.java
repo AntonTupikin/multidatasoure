@@ -61,6 +61,20 @@ public class Estimate {
     @ToString.Exclude
     private List<EstimateItem> items = new ArrayList<>();
 
+    /**
+     * Связанные элементы каталога (глобальные позиции сметы), ManyToMany.
+     * Количество/итоги не хранятся здесь — только связь для переиспользования.
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "estimate_catalog_items",
+            joinColumns = @JoinColumn(name = "estimate_id"),
+            inverseJoinColumns = @JoinColumn(name = "catalog_item_id")
+    )
+    @Builder.Default
+    @ToString.Exclude
+    private List<CatalogItem> catalogItems = new ArrayList<>();
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -77,4 +91,3 @@ public class Estimate {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }
-
