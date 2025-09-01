@@ -33,6 +33,8 @@ public class EstimateController {
     private final EstimateItemGetScenario estimateItemGetScenario;
     private final UserService userService;
     private final EstimateItemHistoryScenario estimateItemHistoryScenario;
+    private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemAddScenario estimateCatalogItemAddScenario;
+    private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemListScenario estimateCatalogItemListScenario;
 
     @Operation(summary = "Создание сметы для проекта", security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.CREATED)
@@ -125,5 +127,27 @@ public class EstimateController {
             @PathVariable Long itemId
     ) {
         return estimateItemHistoryScenario.history(userService.get(principal).getId(), estimateId, itemId);
+    }
+
+    // Каталожные позиции в смету
+    @io.swagger.v3.oas.annotations.Operation(summary = "Добавление каталожной позиции в смету", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
+    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.CREATED)
+    @org.springframework.web.bind.annotation.PostMapping("/estimates/{estimateId}/catalog-items")
+    public com.example.multidatasoure.controller.response.EstimateCatalogItemResponse addCatalogItem(
+            Principal principal,
+            @PathVariable Long estimateId,
+            @jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody com.example.multidatasoure.controller.request.EstimateCatalogItemAddRequest request
+    ) {
+        return estimateCatalogItemAddScenario.add(userService.get(principal).getId(), estimateId, request);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Список каталожных позиций сметы", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
+    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.OK)
+    @org.springframework.web.bind.annotation.GetMapping("/estimates/{estimateId}/catalog-items")
+    public java.util.List<com.example.multidatasoure.controller.response.EstimateCatalogItemResponse> listCatalogItems(
+            Principal principal,
+            @PathVariable Long estimateId
+    ) {
+        return estimateCatalogItemListScenario.list(userService.get(principal).getId(), estimateId);
     }
 }

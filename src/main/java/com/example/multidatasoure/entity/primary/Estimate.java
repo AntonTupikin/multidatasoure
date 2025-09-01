@@ -62,18 +62,12 @@ public class Estimate {
     private List<EstimateItem> items = new ArrayList<>();
 
     /**
-     * Связанные элементы каталога (глобальные позиции сметы), ManyToMany.
-     * Количество/итоги не хранятся здесь — только связь для переиспользования.
+     * Связанные элементы каталога со сметой через отдельную сущность с количеством/ценой.
      */
-    @ManyToMany
-    @JoinTable(
-            name = "estimate_catalog_items",
-            joinColumns = @JoinColumn(name = "estimate_id"),
-            inverseJoinColumns = @JoinColumn(name = "catalog_item_id")
-    )
+    @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
-    private List<CatalogItem> catalogItems = new ArrayList<>();
+    private List<EstimateCatalogItem> catalogItems = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
