@@ -1,7 +1,8 @@
 package com.example.multidatasoure.controller;
 
+import com.example.multidatasoure.controller.request.CatalogItemCreateRequest;
 import com.example.multidatasoure.controller.response.CatalogItemResponse;
-import com.example.multidatasoure.mapper.CatalogItemMapper;
+import com.example.multidatasoure.scenario.catalog.CatalogItemCreateScenario;
 import com.example.multidatasoure.scenario.catalog.CatalogItemGetScenario;
 import com.example.multidatasoure.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +25,7 @@ import java.security.Principal;
 @RequestMapping("/api")
 public class CatalogItemController {
     private final CatalogItemGetScenario catalogItemGetScenario;
+    private final CatalogItemCreateScenario catalogItemCreateScenario;
     private final UserService userService;
 
     @Operation(summary = "Список глобальных позиций (каталог)", security = @SecurityRequirement(name = "bearer"))
@@ -36,5 +38,14 @@ public class CatalogItemController {
     ) {
         return catalogItemGetScenario.list(userService.get(principal).getId(), pageable, query);
     }
-}
 
+    @Operation(summary = "Создание позиции каталога", security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.CREATED)
+    @org.springframework.web.bind.annotation.PostMapping("/items")
+    public CatalogItemResponse create(
+            Principal principal,
+            @jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody CatalogItemCreateRequest request
+    ) {
+        return catalogItemCreateScenario.create(userService.get(principal).getId(), request);
+    }
+}
