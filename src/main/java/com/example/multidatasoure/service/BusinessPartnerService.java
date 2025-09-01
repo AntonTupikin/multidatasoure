@@ -35,4 +35,10 @@ public class BusinessPartnerService {
         return partnerRepository.findByIdAndOwner(id, user)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.business-partner"));
     }
+
+    public BusinessPartner resolveBusinessPartner(User user, Long partnerId) {
+        if (partnerId == null) return null;
+        return partnerRepository.findByIdAndOwner(partnerId, user)
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.business-partner"));
+    }
 }
