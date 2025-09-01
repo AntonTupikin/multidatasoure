@@ -1,17 +1,35 @@
 package com.example.multidatasoure.controller;
 
+import com.example.multidatasoure.controller.request.EstimateCatalogItemAddRequest;
 import com.example.multidatasoure.controller.request.EstimateCreateRequest;
 import com.example.multidatasoure.controller.request.EstimateItemCreateRequest;
 import com.example.multidatasoure.controller.response.EstimateItemResponse;
 import com.example.multidatasoure.controller.response.EstimateResponse;
-import com.example.multidatasoure.scenario.estimate.*;
+import com.example.multidatasoure.scenario.estimate.EstimateCreateScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateDeleteScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateGetScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateItemAddScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateItemDeleteScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateItemGetScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateItemHistoryScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateItemPatchScenario;
+import com.example.multidatasoure.scenario.estimate.EstimateItemsUpsertScenario;
 import com.example.multidatasoure.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
@@ -131,13 +149,13 @@ public class EstimateController {
     }
 
     // Каталожные позиции в смету
-    @io.swagger.v3.oas.annotations.Operation(summary = "Добавление каталожной позиции в смету", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
-    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-    @org.springframework.web.bind.annotation.PostMapping("/estimates/{estimateId}/catalog-items")
+    @Operation(summary = "Добавление каталожной позиции в смету", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
+    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
+    @PostMapping("/estimates/{estimateId}/catalog-items")
     public com.example.multidatasoure.controller.response.EstimateCatalogItemResponse addCatalogItem(
             Principal principal,
             @PathVariable Long estimateId,
-            @jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody com.example.multidatasoure.controller.request.EstimateCatalogItemAddRequest request
+            @Valid @RequestBody EstimateCatalogItemAddRequest request
     ) {
         return estimateCatalogItemAddScenario.add(userService.get(principal).getId(), estimateId, request);
     }
