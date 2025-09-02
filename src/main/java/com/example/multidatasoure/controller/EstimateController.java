@@ -54,6 +54,7 @@ public class EstimateController {
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemAddScenario estimateCatalogItemAddScenario;
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemListScenario estimateCatalogItemListScenario;
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemDeleteScenario estimateCatalogItemDeleteScenario;
+    private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemPatchScenario estimateCatalogItemPatchScenario;
 
     @Operation(summary = "Создание сметы для проекта", security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.CREATED)
@@ -179,5 +180,17 @@ public class EstimateController {
             @PathVariable Long catalogItemId
     ) {
         estimateCatalogItemDeleteScenario.delete(userService.get(principal).getId(), estimateId, catalogItemId);
+    }
+
+    @Operation(summary = "Изменение каталожной позиции в смете", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
+    @ResponseStatus(org.springframework.http.HttpStatus.OK)
+    @PatchMapping("/estimates/{estimateId}/catalog-items/{catalogItemId}")
+    public com.example.multidatasoure.controller.response.EstimateCatalogItemResponse patchCatalogItem(
+            Principal principal,
+            @PathVariable Long estimateId,
+            @PathVariable Long catalogItemId,
+            @jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody com.example.multidatasoure.controller.request.EstimateCatalogItemPatchRequest request
+    ) {
+        return estimateCatalogItemPatchScenario.patch(userService.get(principal).getId(), estimateId, catalogItemId, request);
     }
 }

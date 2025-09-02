@@ -6,6 +6,8 @@ import com.example.multidatasoure.controller.response.EstimateItemHistoryRespons
 import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.EstimateItem;
 import com.example.multidatasoure.entity.primary.EstimateItemHistory;
+import com.example.multidatasoure.entity.primary.ItemCategory;
+import com.example.multidatasoure.entity.primary.UnitOfMeasure;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.EstimateItemHistoryRepository;
@@ -30,10 +32,10 @@ public class EstimateItemService {
         EstimateItem item = EstimateItem.builder()
                 .estimate(estimate)
                 .materialName(request.materialName())
-                .unit(request.unit())
+                .unit(request.unit() == null ? null : UnitOfMeasure.valueOf(request.unit()))
                 .quantity(request.quantity() == null ? BigDecimal.ZERO : request.quantity())
                 .unitPrice(request.unitPrice() == null ? BigDecimal.ZERO : request.unitPrice())
-                .category(request.category())
+                .category(request.category() == null ? null : ItemCategory.valueOf(request.category()))
                 .positionNo(request.positionNo())
                 .businessPartner(businessPartnerService.resolveBusinessPartner(user, request.businessPartnerId()))
                 .build();
@@ -69,7 +71,7 @@ public class EstimateItemService {
         estimateItem.setMaterialName(name);
     }
 
-    public void setUnit(EstimateItem estimateItem, String unit) {
+    public void setUnit(EstimateItem estimateItem, UnitOfMeasure unit) {
         estimateItem.setUnit(unit);
     }
 
@@ -81,7 +83,7 @@ public class EstimateItemService {
         estimateItem.setUnitPrice(unitPrice);
     }
 
-    public void setCategory(EstimateItem estimateItem, String category) {
+    public void setCategory(EstimateItem estimateItem, ItemCategory category) {
         estimateItem.setCategory(category);
     }
 
@@ -104,10 +106,10 @@ public class EstimateItemService {
                 EstimateItem item = EstimateItem.builder()
                         .estimate(estimate)
                         .materialName(it.materialName())
-                        .unit(it.unit())
+                        .unit(it.unit() == null ? null : UnitOfMeasure.valueOf(it.unit()))
                         .quantity(it.quantity() == null ? BigDecimal.ZERO : it.quantity())
                         .unitPrice(it.unitPrice() == null ? BigDecimal.ZERO : it.unitPrice())
-                        .category(it.category())
+                        .category(it.category() == null ? null : ItemCategory.valueOf(it.category()))
                         .positionNo(it.positionNo())
                         .businessPartner(businessPartnerService.resolveBusinessPartner(user, it.businessPartnerId()))
                         .build();
@@ -116,15 +118,15 @@ public class EstimateItemService {
                 EstimateItem existing = estimateItemRepository.findById(it.id())
                         .filter(i -> Objects.equals(i.getEstimate().getId(), estimate.getId()))
                         .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
-                String oldUnit = existing.getUnit();
+                UnitOfMeasure oldUnit = existing.getUnit();
                 var oldQuantity = existing.getQuantity();
                 var oldUnitPrice = existing.getUnitPrice();
 
                 if (it.materialName() != null) existing.setMaterialName(it.materialName());
-                if (it.unit() != null) existing.setUnit(it.unit());
+                if (it.unit() != null) existing.setUnit(UnitOfMeasure.valueOf(it.unit()));
                 if (it.quantity() != null) existing.setQuantity(it.quantity());
                 if (it.unitPrice() != null) existing.setUnitPrice(it.unitPrice());
-                if (it.category() != null) existing.setCategory(it.category());
+                if (it.category() != null) existing.setCategory(ItemCategory.valueOf(it.category()));
                 if (it.positionNo() != null) existing.setPositionNo(it.positionNo());
                 if (it.businessPartnerId() != null)
                     existing.setBusinessPartner(businessPartnerService.resolveBusinessPartner(user, it.businessPartnerId()));
@@ -151,6 +153,7 @@ public class EstimateItemService {
             }
         }).toList();
     }
+
 
     public java.util.List<EstimateItemHistory> listItemHistoryEntities(EstimateItem item) {
         return estimateItemHistoryRepository.findAllByItemIdOrderByChangedAtDesc(item.getId());

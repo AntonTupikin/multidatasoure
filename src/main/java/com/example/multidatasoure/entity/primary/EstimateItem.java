@@ -39,8 +39,9 @@ public class EstimateItem {
     /**
      * Единица измерения (шт, м2, кг и т.п.).
      */
+    @Enumerated(EnumType.STRING)
     @Column(length = 50)
-    private String unit;
+    private UnitOfMeasure unit;
 
     /**
      * Количество. Поддерживает дробные значения.
@@ -59,8 +60,9 @@ public class EstimateItem {
     /**
      * Категория/раздел сметы (опционально).
      */
+    @Enumerated(EnumType.STRING)
     @Column(length = 100)
-    private String category;
+    private ItemCategory category;
 
     /**
      * Порядок отображения позиции внутри сметы (опционально).

@@ -43,8 +43,9 @@ public class CatalogItem {
     /**
      * Единица измерения.
      */
+    @Enumerated(EnumType.STRING)
     @Column(length = 50)
-    private String unit;
+    private UnitOfMeasure unit;
 
     /**
      * Базовая цена за единицу (опционально).
@@ -56,8 +57,9 @@ public class CatalogItem {
     /**
      * Категория/раздел.
      */
+    @Enumerated(EnumType.STRING)
     @Column(length = 100)
-    private String category;
+    private ItemCategory category;
 
     /**
      * Опциональный контрагент.
@@ -82,4 +84,3 @@ public class CatalogItem {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }
-

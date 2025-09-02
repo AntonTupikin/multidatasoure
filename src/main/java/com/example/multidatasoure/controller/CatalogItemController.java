@@ -2,8 +2,10 @@ package com.example.multidatasoure.controller;
 
 import com.example.multidatasoure.controller.request.CatalogItemCreateRequest;
 import com.example.multidatasoure.controller.response.CatalogItemResponse;
+import com.example.multidatasoure.controller.request.CatalogItemPatchRequest;
 import com.example.multidatasoure.scenario.catalog.CatalogItemCreateScenario;
 import com.example.multidatasoure.scenario.catalog.CatalogItemGetScenario;
+import com.example.multidatasoure.scenario.catalog.CatalogItemPatchScenario;
 import com.example.multidatasoure.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,6 +28,7 @@ import java.security.Principal;
 public class CatalogItemController {
     private final CatalogItemGetScenario catalogItemGetScenario;
     private final CatalogItemCreateScenario catalogItemCreateScenario;
+    private final CatalogItemPatchScenario catalogItemPatchScenario;
     private final UserService userService;
 
     @Operation(summary = "Список глобальных позиций (каталог)", security = @SecurityRequirement(name = "bearer"))
@@ -47,5 +50,16 @@ public class CatalogItemController {
             @jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody CatalogItemCreateRequest request
     ) {
         return catalogItemCreateScenario.create(userService.get(principal).getId(), request);
+    }
+
+    @Operation(summary = "Изменение позиции каталога", security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @org.springframework.web.bind.annotation.PatchMapping("/items/{id}")
+    public CatalogItemResponse patch(
+            Principal principal,
+            @org.springframework.web.bind.annotation.PathVariable Long id,
+            @jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody CatalogItemPatchRequest request
+    ) {
+        return catalogItemPatchScenario.patch(userService.get(principal).getId(), id, request);
     }
 }

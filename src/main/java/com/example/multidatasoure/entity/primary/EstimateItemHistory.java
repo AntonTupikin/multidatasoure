@@ -33,11 +33,13 @@ public class EstimateItemHistory {
     @Column(name = "changed_at", nullable = false)
     private Instant changedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "old_unit", length = 50)
-    private String oldUnit;
+    private UnitOfMeasure oldUnit;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "new_unit", length = 50)
-    private String newUnit;
+    private UnitOfMeasure newUnit;
 
     @Column(name = "old_quantity", precision = 19, scale = 3)
     private BigDecimal oldQuantity;
@@ -51,4 +53,3 @@ public class EstimateItemHistory {
     @Column(name = "new_unit_price", precision = 19, scale = 2)
     private BigDecimal newUnitPrice;
 }
-

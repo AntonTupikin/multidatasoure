@@ -1,6 +1,7 @@
 package com.example.multidatasoure.service;
 
 import com.example.multidatasoure.controller.request.EstimateCatalogItemAddRequest;
+import com.example.multidatasoure.controller.request.EstimateCatalogItemPatchRequest;
 import com.example.multidatasoure.entity.primary.*;
 import com.example.multidatasoure.exception.BadRequestException;
 import com.example.multidatasoure.exception.NotFoundException;
@@ -51,5 +52,17 @@ public class EstimateCatalogItemService {
         EstimateCatalogItem link = estimateCatalogItemRepository.findByEstimateAndCatalogItem(estimate, catalogItem)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-catalog-item"));
         estimateCatalogItemRepository.delete(link);
+    }
+
+    public EstimateCatalogItem patch(User user, Long estimateId, Long catalogItemId, EstimateCatalogItemPatchRequest request) {
+        Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
+        CatalogItem catalogItem = catalogItemRepository.findById(catalogItemId)
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.catalog-item"));
+        EstimateCatalogItem link = estimateCatalogItemRepository.findByEstimateAndCatalogItem(estimate, catalogItem)
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-catalog-item"));
+        if (request.quantity() != null) link.setQuantity(request.quantity());
+        if (request.unitPrice() != null) link.setUnitPrice(request.unitPrice());
+        if (request.positionNo() != null) link.setPositionNo(request.positionNo());
+        return estimateCatalogItemRepository.save(link);
     }
 }

@@ -5,6 +5,8 @@ import com.example.multidatasoure.controller.response.EstimateItemResponse;
 import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.EstimateItem;
 import com.example.multidatasoure.entity.primary.EstimateItemHistory;
+import com.example.multidatasoure.entity.primary.ItemCategory;
+import com.example.multidatasoure.entity.primary.UnitOfMeasure;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.mapper.EstimateMapper;
 import com.example.multidatasoure.repository.primary.EstimateItemHistoryRepository;
@@ -35,15 +37,15 @@ public class EstimateItemPatchScenario {
         EstimateItem estimateItem = estimateItemService.getByIdAndEstimate(itemId, estimate);
 
         // Capture old values to track changes
-        String oldUnit = estimateItem.getUnit();
+        UnitOfMeasure oldUnit = estimateItem.getUnit();
         var oldQuantity = estimateItem.getQuantity();
         var oldUnitPrice = estimateItem.getUnitPrice();
         // setters moved to service
         if (request.materialName() != null) estimateItemService.setMaterialName(estimateItem, request.materialName());
-        if (request.unit() != null) estimateItemService.setUnit(estimateItem, request.unit());
+        if (request.unit() != null) estimateItemService.setUnit(estimateItem, UnitOfMeasure.valueOf(request.unit()));
         if (request.quantity() != null) estimateItemService.setQuantity(estimateItem, request.quantity());
         if (request.unitPrice() != null) estimateItemService.setUnitPrice(estimateItem, request.unitPrice());
-        if (request.category() != null) estimateItemService.setCategory(estimateItem, request.category());
+        if (request.category() != null) estimateItemService.setCategory(estimateItem, ItemCategory.valueOf(request.category()));
         if (request.positionNo() != null) estimateItemService.setPositionNo(estimateItem, request.positionNo());
         if (request.businessPartnerId() != null) estimateItemService.setBusinessPartner(estimateItem, user, request.businessPartnerId());
         // Write history if tracked fields changed
