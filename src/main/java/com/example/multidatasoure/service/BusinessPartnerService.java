@@ -23,7 +23,9 @@ public class BusinessPartnerService {
         return partnerRepository.save(partner);
     }
 
-    public List<BusinessPartner> list(User user) { return partnerRepository.findAllByOwner(user); }
+    public List<BusinessPartner> list(User user) {
+        return partnerRepository.findAllByOwner(user);
+    }
 
     public void delete(User user, Long id) {
         BusinessPartner partner = partnerRepository.findByIdAndOwner(id, user)
@@ -37,7 +39,8 @@ public class BusinessPartnerService {
     }
 
     public BusinessPartner resolveBusinessPartner(User user, Long partnerId) {
-        if (partnerId == null) return null;
+        if (partnerId == null)
+            return null;
         return partnerRepository.findByIdAndOwner(partnerId, user)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.business-partner"));
     }

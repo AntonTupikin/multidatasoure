@@ -73,6 +73,26 @@ public class EstimateItemService {
         estimateItem.setUnit(unit);
     }
 
+    public void setQuantity(EstimateItem estimateItem, BigDecimal quantity) {
+        estimateItem.setQuantity(quantity);
+    }
+
+    public void setUnitPrice(EstimateItem estimateItem, BigDecimal unitPrice) {
+        estimateItem.setUnitPrice(unitPrice);
+    }
+
+    public void setCategory(EstimateItem estimateItem, String category) {
+        estimateItem.setCategory(category);
+    }
+
+    public void setPositionNo(EstimateItem estimateItem, Integer positionNo) {
+        estimateItem.setPositionNo(positionNo);
+    }
+
+    public void setBusinessPartner(EstimateItem estimateItem, User user, Long businessPartnerId) {
+        estimateItem.setBusinessPartner(businessPartnerService.resolveBusinessPartner(user, businessPartnerId));
+    }
+
 
     /**
      * Массовое добавление/обновление: если id есть — обновляем, если нет — создаем.
@@ -132,26 +152,7 @@ public class EstimateItemService {
         }).toList();
     }
 
-    public List<EstimateItemHistoryResponse> listItemHistory(User user, Long estimateId, Long itemId) {
-        Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
-        EstimateItem item = estimateItemRepository.findById(itemId)
-                .filter(i -> Objects.equals(i.getEstimate().getId(), estimate.getId()))
-                .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
-        return estimateItemHistoryRepository.findAllByItemIdOrderByChangedAtDesc(item.getId())
-                .stream()
-                .map(h -> new EstimateItemHistoryResponse(
-                        h.getId(),
-                        item.getId(),
-                        h.getChangedBy() == null ? null : h.getChangedBy().getId(),
-                        h.getChangedBy() == null ? null : h.getChangedBy().getUsername(),
-                        h.getChangedAt(),
-                        h.getOldUnit(),
-                        h.getNewUnit(),
-                        h.getOldQuantity(),
-                        h.getNewQuantity(),
-                        h.getOldUnitPrice(),
-                        h.getNewUnitPrice()
-                ))
-                .toList();
+    public java.util.List<EstimateItemHistory> listItemHistoryEntities(EstimateItem item) {
+        return estimateItemHistoryRepository.findAllByItemIdOrderByChangedAtDesc(item.getId());
     }
 }

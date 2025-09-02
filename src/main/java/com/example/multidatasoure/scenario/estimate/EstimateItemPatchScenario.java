@@ -8,7 +8,6 @@ import com.example.multidatasoure.entity.primary.EstimateItemHistory;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.mapper.EstimateMapper;
 import com.example.multidatasoure.repository.primary.EstimateItemHistoryRepository;
-import com.example.multidatasoure.service.BusinessPartnerService;
 import com.example.multidatasoure.service.EstimateItemService;
 import com.example.multidatasoure.service.EstimateService;
 import com.example.multidatasoure.service.UserService;
@@ -25,11 +24,9 @@ import java.util.Objects;
 public class EstimateItemPatchScenario {
     private final EstimateItemService estimateItemService;
     private final UserService userService;
-    private final BusinessPartnerService businessPartnerService;
     private final EstimateService estimateService;
     private final EstimateMapper estimateMapper;
     private final EstimateItemHistoryRepository estimateItemHistoryRepository;
-
 
     @Transactional
     public EstimateItemResponse patch(Long userId, Long estimateId, Long itemId, EstimateItemPatchRequest request) {
@@ -41,14 +38,14 @@ public class EstimateItemPatchScenario {
         String oldUnit = estimateItem.getUnit();
         var oldQuantity = estimateItem.getQuantity();
         var oldUnitPrice = estimateItem.getUnitPrice();
-
-        if (request.materialName() != null) estimateItem.setMaterialName(request.materialName());
-        if (request.unit() != null) estimateItem.setUnit(request.unit());
-        if (request.quantity() != null) estimateItem.setQuantity(request.quantity());
-        if (request.unitPrice() != null) estimateItem.setUnitPrice(request.unitPrice());
-        if (request.category() != null) estimateItem.setCategory(request.category());
-        if (request.positionNo() != null) estimateItem.setPositionNo(request.positionNo());
-        if (request.businessPartnerId() != null) estimateItem.setBusinessPartner(businessPartnerService.resolveBusinessPartner(user, request.businessPartnerId()));
+        // setters moved to service
+        if (request.materialName() != null) estimateItemService.setMaterialName(estimateItem, request.materialName());
+        if (request.unit() != null) estimateItemService.setUnit(estimateItem, request.unit());
+        if (request.quantity() != null) estimateItemService.setQuantity(estimateItem, request.quantity());
+        if (request.unitPrice() != null) estimateItemService.setUnitPrice(estimateItem, request.unitPrice());
+        if (request.category() != null) estimateItemService.setCategory(estimateItem, request.category());
+        if (request.positionNo() != null) estimateItemService.setPositionNo(estimateItem, request.positionNo());
+        if (request.businessPartnerId() != null) estimateItemService.setBusinessPartner(estimateItem, user, request.businessPartnerId());
         // Write history if tracked fields changed
         boolean changed =
                 !Objects.equals(oldUnit, estimateItem.getUnit()) ||
@@ -68,9 +65,6 @@ public class EstimateItemPatchScenario {
                     .build();
             estimateItemHistoryRepository.save(history);
         }
-
-
-
         return estimateMapper.toItemResponse(estimateItem);
     }
 }

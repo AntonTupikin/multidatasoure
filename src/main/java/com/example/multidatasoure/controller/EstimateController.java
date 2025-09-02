@@ -160,9 +160,9 @@ public class EstimateController {
         return estimateCatalogItemAddScenario.add(userService.get(principal).getId(), estimateId, request);
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Список каталожных позиций сметы", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
-    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.OK)
-    @org.springframework.web.bind.annotation.GetMapping("/estimates/{estimateId}/catalog-items")
+    @Operation(summary = "Список каталожных позиций сметы", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
+    @ResponseStatus(org.springframework.http.HttpStatus.OK)
+    @GetMapping("/estimates/{estimateId}/catalog-items")
     public java.util.List<com.example.multidatasoure.controller.response.EstimateCatalogItemResponse> listCatalogItems(
             Principal principal,
             @PathVariable Long estimateId
@@ -170,9 +170,9 @@ public class EstimateController {
         return estimateCatalogItemListScenario.list(userService.get(principal).getId(), estimateId);
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Удаление каталожной позиции из сметы", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
-    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.OK)
-    @org.springframework.web.bind.annotation.DeleteMapping("/estimates/{estimateId}/catalog-items/{catalogItemId}")
+    @Operation(summary = "Удаление каталожной позиции из сметы", security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearer"))
+    @ResponseStatus(org.springframework.http.HttpStatus.OK)
+    @DeleteMapping("/estimates/{estimateId}/catalog-items/{catalogItemId}")
     public void deleteCatalogItem(
             Principal principal,
             @PathVariable Long estimateId,

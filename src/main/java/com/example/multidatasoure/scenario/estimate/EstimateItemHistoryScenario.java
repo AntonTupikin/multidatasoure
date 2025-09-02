@@ -1,6 +1,9 @@
 package com.example.multidatasoure.scenario.estimate;
 
 import com.example.multidatasoure.controller.response.EstimateItemHistoryResponse;
+import com.example.multidatasoure.entity.primary.EstimateItem;
+import com.example.multidatasoure.entity.primary.User;
+import com.example.multidatasoure.mapper.EstimateMapper;
 import com.example.multidatasoure.service.EstimateItemService;
 import com.example.multidatasoure.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +17,16 @@ import java.util.List;
 public class EstimateItemHistoryScenario {
     private final EstimateItemService estimateItemService;
     private final UserService userService;
+    private final EstimateMapper estimateMapper;
 
     @Transactional(readOnly = true)
     public List<EstimateItemHistoryResponse> history(Long userId, Long estimateId, Long itemId) {
-        return estimateItemService.listItemHistory(userService.findById(userId), estimateId, itemId);
+        User user = userService.findById(userId);
+        EstimateItem item = estimateItemService.getItem(user, estimateId, itemId);
+        return estimateItemService
+                .listItemHistoryEntities(item)
+                .stream()
+                .map(estimateMapper::toItemHistoryResponse)
+                .toList();
     }
 }
-

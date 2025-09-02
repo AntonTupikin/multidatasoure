@@ -3,6 +3,8 @@ package com.example.multidatasoure.scenario.estimate;
 import com.example.multidatasoure.controller.response.EstimateItemHistoryResponse;
 import com.example.multidatasoure.controller.response.EstimateItemResponse;
 import com.example.multidatasoure.controller.response.EstimateItemWithHistoryResponse;
+import com.example.multidatasoure.entity.primary.EstimateItem;
+import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.mapper.EstimateMapper;
 import com.example.multidatasoure.service.EstimateItemService;
 import com.example.multidatasoure.service.UserService;
@@ -21,11 +23,15 @@ public class EstimateItemGetScenario {
 
     @Transactional(readOnly = true)
     public EstimateItemWithHistoryResponse get(Long userId, Long estimateId, Long itemId) {
-        var user = userService.findById(userId);
-        var item = estimateItemService.getItem(user, estimateId, itemId);
+        User user = userService.findById(userId);
+        EstimateItem item = estimateItemService.getItem(user, estimateId, itemId);
         EstimateItemResponse itemDto = estimateMapper.toItemResponse(item);
-        List<EstimateItemHistoryResponse> history = estimateItemService.listItemHistory(user, estimateId, itemId);
+        // Историю получаем через сервис, маппинг оставляем в сценарии
+        List<EstimateItemHistoryResponse> history = estimateItemService
+                .listItemHistoryEntities(item)
+                .stream()
+                .map(estimateMapper::toItemHistoryResponse)
+                .toList();
         return new EstimateItemWithHistoryResponse(itemDto, history);
     }
 }
-
