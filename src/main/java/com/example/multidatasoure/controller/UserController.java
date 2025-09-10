@@ -56,7 +56,6 @@ public class UserController {
         return userGetScenario.getById(id, userService.get(principal).getId());
     }
 
-
     @Operation(
             summary = "Получение информации о пользователе",
             security = @SecurityRequirement(name = "bearer"))

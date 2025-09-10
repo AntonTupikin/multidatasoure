@@ -22,19 +22,15 @@
                 <constraints nullable="false"/>
             </column>
             <column name="estimate_item_id" type="BIGINT">
-                <constraints nullable="false"/>
             </column>
             <column name="estimate_catalog_item_id" type="BIGINT">
-                <constraints nullable="false"/>
             </column>
             <column name="work_status" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="estimate_item_quantity" type="NUMERIC(19,3)" defaultValueNumeric="0">
-                <constraints nullable="false"/>
             </column>
             <column name="estimate_catalog_item_quantity" type="NUMERIC(19,3)" defaultValueNumeric="0">
-                <constraints nullable="false"/>
             </column>
         </createTable>
         <createIndex tableName="works" indexName="i_works_employee_id">

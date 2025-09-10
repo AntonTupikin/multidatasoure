@@ -1,6 +1,12 @@
 package com.example.multidatasoure.service;
 
-import com.example.multidatasoure.entity.primary.*;
+import com.example.multidatasoure.controller.request.WorkCreateRequest;
+import com.example.multidatasoure.entity.primary.Estimate;
+import com.example.multidatasoure.entity.primary.EstimateCatalogItem;
+import com.example.multidatasoure.entity.primary.EstimateItem;
+import com.example.multidatasoure.entity.primary.User;
+import com.example.multidatasoure.entity.primary.Work;
+import com.example.multidatasoure.entity.primary.WorkStatus;
 import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.WorkRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +14,39 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class WorkService {
     private final WorkRepository workRepository;
+
+    public Work save(User employee, Estimate estimate, EstimateItem estimateItem,
+                     WorkCreateRequest request) {
+
+        Work work = new Work();
+        work.setEmployee(employee);
+        work.setEstimate(estimate);
+        work.setEstimateItem(estimateItem);
+        setWorkStatus(work, WorkStatus.PLANNED);
+        if (request.plannedStartDate() != null) {
+            work.setPlannedStartDate(request.plannedStartDate().atOffset(ZoneOffset.UTC));
+        }
+        if (request.plannedEndDate() != null) {
+            work.setPlannedEndDate(request.plannedEndDate().atOffset(ZoneOffset.UTC));
+        }
+        if (request.actualStartDate() != null) {
+            work.setPlannedStartDate(request.actualStartDate().atOffset(ZoneOffset.UTC));
+        }
+        if (request.actualEndDate() != null) {
+            work.setPlannedEndDate(request.actualEndDate().atOffset(ZoneOffset.UTC));
+        }
+        if (request.estimateItemQuantity() != null) {
+            work.setEstimateItemQuantity(request.estimateItemQuantity());
+        }
+        return workRepository.save(work);
+    }
 
     public Work getById(Long id) {
         return workRepository.findById(id)
@@ -28,19 +61,47 @@ public class WorkService {
         return workRepository.save(work);
     }
 
-    public Work newEntity() {
-        return new Work();
+    public void setEmployee(Work work, User employee) {
+        work.setEmployee(employee);
     }
 
-    public void setEmployee(Work work, User employee) { work.setEmployee(employee); }
-    public void setEstimate(Work work, Estimate estimate) { work.setEstimate(estimate); }
-    public void setEstimateItem(Work work, EstimateItem estimateItem) { work.setEstimateItem(estimateItem); }
-    public void setEstimateCatalogItem(Work work, EstimateCatalogItem estimateCatalogItem) { work.setEstimateCatalogItem(estimateCatalogItem); }
-    public void setWorkStatus(Work work, WorkStatus status) { work.setWorkStatus(status); }
-    public void setPlannedStartDate(Work work, OffsetDateTime v) { work.setPlannedStartDate(v); }
-    public void setPlannedEndDate(Work work, OffsetDateTime v) { work.setPlannedEndDate(v); }
-    public void setActualStartDate(Work work, OffsetDateTime v) { work.setActualStartDate(v); }
-    public void setActualEndDate(Work work, OffsetDateTime v) { work.setActualEndDate(v); }
-    public void setEstimateItemQuantity(Work work, BigDecimal v) { work.setEstimateItemQuantity(v); }
-    public void setEstimateCatalogItemQuantity(Work work, BigDecimal v) { work.setEstimateCatalogItemQuantity(v); }
+    public void setEstimate(Work work, Estimate estimate) {
+        work.setEstimate(estimate);
+    }
+
+    public void setEstimateItem(Work work, EstimateItem estimateItem) {
+        work.setEstimateItem(estimateItem);
+    }
+
+    public void setEstimateCatalogItem(Work work, EstimateCatalogItem estimateCatalogItem) {
+        work.setEstimateCatalogItem(estimateCatalogItem);
+    }
+
+    public void setWorkStatus(Work work, WorkStatus status) {
+        work.setWorkStatus(status);
+    }
+
+    public void setPlannedStartDate(Work work, OffsetDateTime v) {
+        work.setPlannedStartDate(v);
+    }
+
+    public void setPlannedEndDate(Work work, OffsetDateTime v) {
+        work.setPlannedEndDate(v);
+    }
+
+    public void setActualStartDate(Work work, OffsetDateTime v) {
+        work.setActualStartDate(v);
+    }
+
+    public void setActualEndDate(Work work, OffsetDateTime v) {
+        work.setActualEndDate(v);
+    }
+
+    public void setEstimateItemQuantity(Work work, BigDecimal v) {
+        work.setEstimateItemQuantity(v);
+    }
+
+    public void setEstimateCatalogItemQuantity(Work work, BigDecimal v) {
+        work.setEstimateCatalogItemQuantity(v);
+    }
 }

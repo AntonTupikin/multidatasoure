@@ -63,7 +63,7 @@ public class Work {
     @ToString.Exclude
     private Estimate estimate;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn
     @ManyToOne
     @ToString.Exclude
     private EstimateItem estimateItem;
@@ -72,7 +72,7 @@ public class Work {
     @Builder.Default
     private BigDecimal estimateItemQuantity = BigDecimal.ZERO;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn
     @ManyToOne
     @ToString.Exclude
     private EstimateCatalogItem estimateCatalogItem;

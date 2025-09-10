@@ -8,8 +8,7 @@ import java.time.Instant;
 public record WorkCreateRequest(
         @NotNull Long estimateId,
         @NotNull Long estimateItemId,
-        @NotNull Long estimateCatalogItemId,
-        @NotNull String workStatus,
+        Long estimateCatalogItemId,
         Instant plannedStartDate,
         Instant plannedEndDate,
         Instant actualStartDate,
