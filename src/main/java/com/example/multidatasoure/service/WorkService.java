@@ -1,8 +1,6 @@
 package com.example.multidatasoure.service;
 
 import com.example.multidatasoure.controller.request.WorkCreateRequest;
-import com.example.multidatasoure.entity.primary.Estimate;
-import com.example.multidatasoure.entity.primary.EstimateCatalogItem;
 import com.example.multidatasoure.entity.primary.EstimateItem;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.entity.primary.Work;
@@ -12,7 +10,6 @@ import com.example.multidatasoure.repository.primary.WorkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -22,13 +19,10 @@ import java.util.List;
 public class WorkService {
     private final WorkRepository workRepository;
 
-    public Work save(User employee, Estimate estimate, EstimateItem estimateItem,
-                     WorkCreateRequest request) {
+    public Work save(User employee, EstimateItem estimateItem, WorkCreateRequest request) {
 
         Work work = new Work();
         work.setEmployee(employee);
-        work.setEstimate(estimate);
-        work.setEstimateItem(estimateItem);
         setWorkStatus(work, WorkStatus.PLANNED);
         if (request.plannedStartDate() != null) {
             work.setPlannedStartDate(request.plannedStartDate().atOffset(ZoneOffset.UTC));
@@ -37,14 +31,15 @@ public class WorkService {
             work.setPlannedEndDate(request.plannedEndDate().atOffset(ZoneOffset.UTC));
         }
         if (request.actualStartDate() != null) {
-            work.setPlannedStartDate(request.actualStartDate().atOffset(ZoneOffset.UTC));
+            work.setActualStartDate(request.actualStartDate().atOffset(ZoneOffset.UTC));
         }
         if (request.actualEndDate() != null) {
-            work.setPlannedEndDate(request.actualEndDate().atOffset(ZoneOffset.UTC));
+            work.setActualEndDate(request.actualEndDate().atOffset(ZoneOffset.UTC));
         }
-        if (request.estimateItemQuantity() != null) {
-            work.setEstimateItemQuantity(request.estimateItemQuantity());
-        }
+
+        // Link with the provided estimate item (ManyToMany)
+        work.addEstimateItem(estimateItem);
+
         return workRepository.save(work);
     }
 
@@ -65,18 +60,6 @@ public class WorkService {
         work.setEmployee(employee);
     }
 
-    public void setEstimate(Work work, Estimate estimate) {
-        work.setEstimate(estimate);
-    }
-
-    public void setEstimateItem(Work work, EstimateItem estimateItem) {
-        work.setEstimateItem(estimateItem);
-    }
-
-    public void setEstimateCatalogItem(Work work, EstimateCatalogItem estimateCatalogItem) {
-        work.setEstimateCatalogItem(estimateCatalogItem);
-    }
-
     public void setWorkStatus(Work work, WorkStatus status) {
         work.setWorkStatus(status);
     }
@@ -95,13 +78,5 @@ public class WorkService {
 
     public void setActualEndDate(Work work, OffsetDateTime v) {
         work.setActualEndDate(v);
-    }
-
-    public void setEstimateItemQuantity(Work work, BigDecimal v) {
-        work.setEstimateItemQuantity(v);
-    }
-
-    public void setEstimateCatalogItemQuantity(Work work, BigDecimal v) {
-        work.setEstimateCatalogItemQuantity(v);
     }
 }

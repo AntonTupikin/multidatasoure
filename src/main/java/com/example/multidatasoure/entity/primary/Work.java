@@ -63,7 +63,7 @@ public class Work {
 
     @ManyToMany
     @JoinTable(name = "works_estimate_items",
-            joinColumns = @JoinColumn(name = "works_id"),
+            joinColumns = @JoinColumn(name = "work_id"),
             inverseJoinColumns = @JoinColumn(name = "estimate_item_id"))
     private Set<EstimateItem> estimateItems = new HashSet<>();
 

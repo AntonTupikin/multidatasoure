@@ -1,0 +1,432 @@
+{
+  "info": {
+    "name": "multidatasoure API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection of all controller endpoints for the CRM multidatasoure project. Set baseUrl and obtain access_token via /api/login."
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" },
+    { "key": "token_type", "value": "Bearer", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{access_token}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Passw0rd!\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user@example.com\",\n  \"password\": \"Passw0rd!\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.access_token) pm.environment.set('access_token', json.access_token);",
+                  "  if (json.token_type) pm.environment.set('token_type', json.token_type);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List All Users (admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/admin/users"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Users (paged, filtered)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users?page=0&size=20&organizationId=&notLinkedToOrganizationId=&projectId=&notAssignedToProjectId="
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users/1"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User (me)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users/me"
+          },
+          "response": []
+        },
+        {
+          "name": "Patch User",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/users/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewPassw0rd!\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Current User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/users"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Employee",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/users/employees",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"employee@example.com\",\n  \"password\": \"Passw0rd!\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Organizations",
+      "item": [
+        {
+          "name": "List My Organizations",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/organization" },
+          "response": []
+        },
+        {
+          "name": "Get Organization By Id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/organization/1" },
+          "response": []
+        },
+        {
+          "name": "Create Organization",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/organization",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Acme LLC\",\n  \"inn\": 1234567890\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Patch Organization",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/organization/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Acme Updated\",\n  \"inn\": 9876543210,\n  \"usersIds\": [2,3]\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Organization",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/organization/1" },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "List Projects (paged, filter)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/projects?page=0&size=20&organizationId=" },
+          "response": []
+        },
+        {
+          "name": "Get Project By Id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/projects/1" },
+          "response": []
+        },
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/projects",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Project\",\n  \"organizationId\": 1,\n  \"clientId\": 1,\n  \"startDate\": \"2025-01-01T00:00:00Z\",\n  \"endDate\": \"2025-12-31T00:00:00Z\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Project",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/projects/1" },
+          "response": []
+        },
+        {
+          "name": "Patch Project (assign employees)",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/projects/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeIds\": [2,3]\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "List Clients (paged)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/clients?page=0&size=20" },
+          "response": []
+        },
+        {
+          "name": "Create Client",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/clients",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"client@example.com\",\n  \"phone\": \"+79990000000\",\n  \"profileType\": \"INDIVIDUAL\",\n  \"individual\": {\n    \"firstName\": \"Ivan\",\n    \"lastName\": \"Ivanov\",\n    \"inn\": \"123456789012\",\n    \"bankAccount\": \"40817810099910004312\"\n  }\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Client",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/clients/1" },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog Items",
+      "item": [
+        {
+          "name": "List Catalog Items (paged, search)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/items?page=0&size=20&q=" },
+          "response": []
+        },
+        {
+          "name": "Create Catalog Item",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/items",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"materialName\": \"Cement\",\n  \"unit\": \"kg\",\n  \"unitPrice\": 5.5,\n  \"category\": \"Materials\",\n  \"businessPartnerId\": 1\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Patch Catalog Item",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/items/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"materialName\": \"Cement M500\",\n  \"unit\": \"kg\",\n  \"unitPrice\": 6.0,\n  \"category\": \"Materials\",\n  \"businessPartnerId\": 1\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Business Partners",
+      "item": [
+        {
+          "name": "Create Partner",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/partners",
+            "body": {"mode":"raw","raw":"{\n  \"name\": \"Supplier LLC\"\n}","options":{"raw":{"language":"json"}}}
+          }
+        },
+        {
+          "name": "List Partners",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/partners" }
+        },
+        {
+          "name": "Delete Partner",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/partners/1" }
+        }
+      ]
+    },
+    {
+      "name": "Estimates",
+      "item": [
+        {
+          "name": "Create Estimate",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/estimates",
+            "body": {"mode":"raw","raw":"{\n  \"projectId\": 1,\n  \"title\": \"Estimate A\",\n  \"currency\": \"RUB\",\n  \"notes\": \"Initial estimate\"\n}","options":{"raw":{"language":"json"}}}
+          }
+        },
+        { "name": "Get Estimate By Id", "request": { "method": "GET", "url": "{{baseUrl}}/api/estimates/1" } },
+        { "name": "Get Project Estimate", "request": { "method": "GET", "url": "{{baseUrl}}/api/projects/1/estimate" } },
+        { "name": "Delete Estimate", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/estimates/1" } },
+        { "name": "List Estimate Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/estimates/1/items" } },
+        { "name": "Get Estimate Item", "request": { "method": "GET", "url": "{{baseUrl}}/api/estimates/1/items/1" } },
+        {
+          "name": "Add Estimate Item",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/estimates/1/items",
+            "body": {"mode":"raw","raw":"{\n  \"materialName\": \"Cement\",\n  \"unit\": \"kg\",\n  \"quantity\": 100,\n  \"unitPrice\": 5.5,\n  \"category\": \"Materials\",\n  \"positionNo\": 1,\n  \"businessPartnerId\": 1\n}","options":{"raw":{"language":"json"}}}
+          }
+        },
+        { "name": "Delete Estimate Item", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/estimates/1/items/1" } },
+        {
+          "name": "Patch Estimate Item",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/estimates/1/items/1",
+            "body": {"mode":"raw","raw":"{\n  \"quantity\": 120,\n  \"unitPrice\": 5.7\n}","options":{"raw":{"language":"json"}}}
+          }
+        },
+        {
+          "name": "Bulk Upsert Estimate Items",
+          "request": {
+            "method": "PUT",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/estimates/1/items/bulk-upsert",
+            "body": {"mode":"raw","raw":"{\n  \"items\": [\n    {\n      \"id\": 1,\n      \"quantity\": 150\n    },\n    {\n      \"materialName\": \"Sand\",\n      \"unit\": \"kg\",\n      \"quantity\": 200,\n      \"unitPrice\": 1.2,\n      \"category\": \"Materials\",\n      \"positionNo\": 2\n    }\n  ]\n}","options":{"raw":{"language":"json"}}}
+          }
+        },
+        { "name": "Estimate Item History", "request": { "method": "GET", "url": "{{baseUrl}}/api/estimates/1/items/1/history" } },
+        {
+          "name": "Add Catalog Item To Estimate",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/estimates/1/catalog-items",
+            "body": {"mode":"raw","raw":"{\n  \"catalogItemId\": 1,\n  \"quantity\": 10,\n  \"unitPrice\": 100,\n  \"positionNo\": 1\n}","options":{"raw":{"language":"json"}}}
+          }
+        },
+        { "name": "List Estimate Catalog Items", "request": { "method": "GET", "url": "{{baseUrl}}/api/estimates/1/catalog-items" } },
+        { "name": "Delete Estimate Catalog Item", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/estimates/1/catalog-items/1" } },
+        {
+          "name": "Patch Estimate Catalog Item",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/estimates/1/catalog-items/1",
+            "body": {"mode":"raw","raw":"{\n  \"quantity\": 12,\n  \"unitPrice\": 110,\n  \"positionNo\": 1\n}","options":{"raw":{"language":"json"}}}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Works",
+      "item": [
+        {
+          "name": "Get Work By Id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/works/1" }
+        },
+        {
+          "name": "List Employee Works",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/users/2/works" }
+        },
+        {
+          "name": "Create Work For Employee",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/users/2/works",
+            "body": {"mode":"raw","raw":"{\n  \"estimateId\": 1,\n  \"estimateItemId\": 1,\n  \"estimateCatalogItemId\": 1,\n  \"workStatus\": \"PLANNED\",\n  \"plannedStartDate\": \"2025-09-10T10:00:00Z\",\n  \"plannedEndDate\": \"2025-09-11T18:00:00Z\",\n  \"actualStartDate\": null,\n  \"actualEndDate\": null,\n  \"estimateItemQuantity\": 50,\n  \"estimateCatalogItemQuantity\": 10\n}","options":{"raw":{"language":"json"}}}
+          }
+        },
+        {
+          "name": "Patch Work",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/works/1",
+            "body": {"mode":"raw","raw":"{\n  \"employeeId\": 2,\n  \"workStatus\": \"IN_PROGRESS\",\n  \"actualStartDate\": \"2025-09-10T11:00:00Z\"\n}","options":{"raw":{"language":"json"}}}
+          }
+        }
+      ]
+    }
+  ]
+}
+

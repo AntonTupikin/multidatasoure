@@ -2,12 +2,10 @@ package com.example.multidatasoure.scenario.work;
 
 import com.example.multidatasoure.controller.request.WorkPatchRequest;
 import com.example.multidatasoure.controller.response.WorkResponse;
-import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.entity.primary.Work;
 import com.example.multidatasoure.entity.primary.WorkStatus;
 import com.example.multidatasoure.mapper.WorkMapper;
-import com.example.multidatasoure.service.EstimateService;
 import com.example.multidatasoure.service.UserService;
 import com.example.multidatasoure.service.WorkService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,6 @@ public class WorksPatchScenario {
     private final WorkService workService;
     private final UserService userService;
     private final WorkMapper workMapper;
-    private final EstimateService estimateService;
 
     @Transactional
     public WorkResponse patch(Long userId, Long worksId, WorkPatchRequest request) {
@@ -38,24 +35,17 @@ public class WorksPatchScenario {
             workService.setEmployee(work, employee);
         }
 
-        if (request.estimateId() != null) {
-            Estimate estimate = estimateService.getByIdAndUser(request.estimateId(), user);
-            workService.setEstimate(work, estimate);
-        }
-
         if (request.workStatus() != null) {
-            workService.setWorkStatus(work, WorkStatus.valueOf(request.workStatus()));
-            if (WorkStatus.valueOf(request.workStatus()) == WorkStatus.IN_PROGRESS) {
+            var status = WorkStatus.valueOf(request.workStatus());
+            workService.setWorkStatus(work, status);
+            if (status == WorkStatus.IN_PROGRESS) {
                 workService.setActualStartDate(work, OffsetDateTime.now(ZoneOffset.UTC));
-            } else if (WorkStatus.valueOf(request.workStatus()) == WorkStatus.DONE) {
+            } else if (status == WorkStatus.DONE) {
                 workService.setActualEndDate(work, OffsetDateTime.now(ZoneOffset.UTC));
             }
         }
 
-        if (request.estimateItemQuantity() != null) {
-            workService.setEstimateItemQuantity(work, request.estimateItemQuantity());
-        }
         log.info("Patch work with id {} ended", worksId);
-        return workMapper.toResponse(work);
+        return workMapper.toResponse(workService.save(work));
     }
 }

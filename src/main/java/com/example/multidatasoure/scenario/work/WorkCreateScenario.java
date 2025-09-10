@@ -6,7 +6,6 @@ import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.EstimateItem;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.mapper.WorkMapper;
-import com.example.multidatasoure.repository.primary.EstimateCatalogItemRepository;
 import com.example.multidatasoure.service.EstimateItemService;
 import com.example.multidatasoure.service.EstimateService;
 import com.example.multidatasoure.service.UserService;
@@ -23,14 +22,14 @@ public class WorkCreateScenario {
     private final WorkMapper workMapper;
     private final EstimateService estimateService;
     private final EstimateItemService estimateItemService;
-    private final EstimateCatalogItemRepository estimateCatalogItemRepository;
 
     @Transactional
     public WorkResponse create(Long userId, Long employeeId, WorkCreateRequest request) {
         User user = userService.findById(userId);
         User employee = userService.findById(employeeId);
+        // validate estimate and item belong together
         Estimate estimate = estimateService.getByIdAndUser(request.estimateId(), user);
         EstimateItem estimateItem = estimateItemService.getByIdAndEstimate(request.estimateItemId(), estimate);
-        return workMapper.toResponse(worksService.save(employee,estimate,estimateItem,request));
+        return workMapper.toResponse(worksService.save(employee, estimateItem, request));
     }
 }

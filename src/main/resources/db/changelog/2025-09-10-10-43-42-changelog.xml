@@ -39,27 +39,33 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createIndex tableName="works_estimate_items" indexName="i_works_estimate_item_id">
+        <createIndex tableName="works_estimate_items" indexName="i_works_estimate_items_works_id">
             <column name="work_id"/>
         </createIndex>
-        <addUniqueConstraint tableName="works_estimate_items" columnNames="works_id, estimate_item_id"
+        <createIndex tableName="works_estimate_items" indexName="i_works_estimate_items_estimate_item_id">
+            <column name="estimate_item_id"/>
+        </createIndex>
+        <addUniqueConstraint tableName="works_estimate_items" columnNames="work_id, estimate_item_id"
                              constraintName="uk_works_estimate_items_work_id_estimate_item_id"/>
         <addForeignKeyConstraint
                 baseTableName="works_estimate_items"
                 baseColumnNames="estimate_item_id"
                 referencedTableName="estimate_items"
                 referencedColumnNames="id"
-                constraintName="fk_worestite_on_estimate_item"/>
+                onDelete="CASCADE"
+                constraintName="fk_works_estimate_items_on_estimate_item"/>
 
         <addForeignKeyConstraint
                 baseTableName="works_estimate_items"
-                baseColumnNames="works_id"
+                baseColumnNames="work_id"
                 referencedTableName="works"
                 referencedColumnNames="id"
-                constraintName="fk_worestite_on_work"/>
+                onDelete="CASCADE"
+                constraintName="fk_works_estimate_items_on_work"/>
 
 
     <rollback>
+        <dropTable tableName="works_estimate_items"/>
         <dropTable tableName="works"/>
     </rollback>
     </changeSet>

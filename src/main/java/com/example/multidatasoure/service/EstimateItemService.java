@@ -52,6 +52,14 @@ public class EstimateItemService {
         EstimateItem item = estimateItemRepository.findById(itemId)
                 .filter(i -> i.getEstimate().getId().equals(estimate.getId()))
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
+        // Detach from works to avoid FK violations and keep works intact
+        if (item.getWorks() != null && !item.getWorks().isEmpty()) {
+            // Copy to avoid ConcurrentModification on bidirectional unlink
+            var worksCopy = new java.util.HashSet<>(item.getWorks());
+            for (var work : worksCopy) {
+                work.removeEstimateItem(item);
+            }
+        }
         estimateItemRepository.delete(item);
     }
 
