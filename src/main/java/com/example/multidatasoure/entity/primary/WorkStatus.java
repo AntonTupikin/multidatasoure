@@ -2,6 +2,8 @@ package com.example.multidatasoure.entity.primary;
 
 public enum WorkStatus {
     PLANNED,
-    STARTED,
-    DONE
+    IN_PROGRESS,
+    DONE,
+    CANCELLED
 }
+
