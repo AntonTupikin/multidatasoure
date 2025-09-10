@@ -16,7 +16,9 @@ public class EstimateItemDeleteScenario {
 
     @Transactional
     public void delete(Long userId, Long estimateId, Long itemId) {
+        log.info("Start delete estimate item id {} from user id {}", estimateId, userId);
         estimateItemService.deleteItem(userService.findById(userId), estimateId, itemId);
+        log.info("Delete estimate item id {} from user id {} finished", estimateId, userId);
     }
 }
 

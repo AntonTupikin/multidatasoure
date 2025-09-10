@@ -2,7 +2,6 @@ package com.example.multidatasoure.service;
 
 import com.example.multidatasoure.controller.request.EstimateItemCreateRequest;
 import com.example.multidatasoure.controller.request.EstimateItemsUpsertRequest;
-import com.example.multidatasoure.controller.response.EstimateItemHistoryResponse;
 import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.EstimateItem;
 import com.example.multidatasoure.entity.primary.EstimateItemHistory;
@@ -49,24 +48,14 @@ public class EstimateItemService {
 
     public void deleteItem(User user, Long estimateId, Long itemId) {
         Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
-        EstimateItem item = estimateItemRepository.findById(itemId)
-                .filter(i -> i.getEstimate().getId().equals(estimate.getId()))
+        EstimateItem item = estimateItemRepository.findByIdAndEstimate(itemId, estimate)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
-        // Detach from works to avoid FK violations and keep works intact
-        if (item.getWorks() != null && !item.getWorks().isEmpty()) {
-            // Copy to avoid ConcurrentModification on bidirectional unlink
-            var worksCopy = new java.util.HashSet<>(item.getWorks());
-            for (var work : worksCopy) {
-                work.removeEstimateItem(item);
-            }
-        }
         estimateItemRepository.delete(item);
     }
 
     public EstimateItem getItem(User user, Long estimateId, Long itemId) {
         Estimate estimate = estimateService.getByIdAndUser(estimateId, user);
-        return estimateItemRepository.findById(itemId)
-                .filter(i -> Objects.equals(i.getEstimate().getId(), estimate.getId()))
+        return estimateItemRepository.findByIdAndEstimate(itemId,estimate)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.estimate-item"));
     }
 

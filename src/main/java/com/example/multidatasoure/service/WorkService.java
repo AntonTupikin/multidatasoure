@@ -3,6 +3,7 @@ package com.example.multidatasoure.service;
 import com.example.multidatasoure.controller.request.WorkCreateRequest;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.entity.primary.Work;
+import com.example.multidatasoure.entity.primary.WorkLine;
 import com.example.multidatasoure.entity.primary.WorkStatus;
 import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.repository.primary.WorkRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +38,13 @@ public class WorkService {
         return workRepository.save(work);
     }
 
-    public Work getById(Long id) {
-        return workRepository.findById(id)
+    public Work getByIdAndEmployee(Long id, User employee) {
+        return workRepository.findByIdAndEmployee(id, employee)
+                .orElseThrow(() -> new NotFoundException("message.exception.not-found.works"));
+    }
+
+    public Work getByIdAndEmployeeSupervisor(Long id, User user) {
+        return workRepository.findByIdAndEmployee_Supervisor(id, user)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.works"));
     }
 
@@ -73,5 +78,9 @@ public class WorkService {
 
     public void setActualEndDate(Work work, OffsetDateTime v) {
         work.setActualEndDate(v);
+    }
+
+    public void setWorkLines(Work work, List<WorkLine> workLines) {
+        workLines.forEach(work::addLine);
     }
 }

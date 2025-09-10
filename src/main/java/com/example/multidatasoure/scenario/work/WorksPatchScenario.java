@@ -2,9 +2,11 @@ package com.example.multidatasoure.scenario.work;
 
 import com.example.multidatasoure.controller.request.WorkPatchRequest;
 import com.example.multidatasoure.controller.response.WorkResponse;
+import com.example.multidatasoure.entity.primary.Role;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.entity.primary.Work;
 import com.example.multidatasoure.entity.primary.WorkStatus;
+import com.example.multidatasoure.exception.NotFoundException;
 import com.example.multidatasoure.mapper.WorkMapper;
 import com.example.multidatasoure.service.UserService;
 import com.example.multidatasoure.service.WorkService;
@@ -25,11 +27,20 @@ public class WorksPatchScenario {
     private final WorkMapper workMapper;
 
     @Transactional
-    public WorkResponse patch(Long userId, Long worksId, WorkPatchRequest request) {
-        log.info("Patch work with id {} start", worksId);
-        Work work = workService.getById(worksId);
+    public WorkResponse patch(Long userId, Long workId, WorkPatchRequest request) {
+        log.info("Patch work with id {} start", workId);
         User user = userService.findById(userId);
+        Work work = null;
+        if (user.getRole()== Role.SUPERVISOR){
+            work = workService.getByIdAndEmployeeSupervisor(workId, user);
 
+        }
+        if (user.getRole()== Role.EMPLOYEE){
+            work = workService.getByIdAndEmployee(workId, user);
+        }
+        if (work == null){
+            throw new NotFoundException("message.exception.not-found.works");
+        }
         if (request.employeeId() != null) {
             User employee = userService.findById(request.employeeId());
             workService.setEmployee(work, employee);
@@ -45,7 +56,7 @@ public class WorksPatchScenario {
             }
         }
 
-        log.info("Patch work with id {} ended", worksId);
+        log.info("Patch work with id {} ended", workId);
         return workMapper.toResponse(workService.save(work));
     }
 }

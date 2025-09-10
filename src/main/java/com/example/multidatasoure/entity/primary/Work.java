@@ -1,8 +1,7 @@
 package com.example.multidatasoure.entity.primary;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,9 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +22,9 @@ import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -63,27 +61,12 @@ public class Work {
     @Column
     private OffsetDateTime actualEndDate;
 
-    @ManyToMany
-    @JoinTable(name = "works_estimate_items",
-            joinColumns = @JoinColumn(name = "work_id"),
-            inverseJoinColumns = @JoinColumn(name = "estimate_item_id"))
-    private Set<EstimateItem> estimateItems = new HashSet<>();
-
     @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private java.util.List<WorkLine> lines = new java.util.ArrayList<>();
-
-    public void addEstimateItem(EstimateItem ei) {
-        estimateItems.add(ei);
-        ei.getWorks().add(this);
-    }
-    public void removeEstimateItem(EstimateItem ei) {
-        estimateItems.remove(ei);
-        ei.getWorks().remove(this);
-    }
+    private List<WorkLine> lines = new ArrayList<>();
 
     public void addLine(WorkLine line) {
-        if (lines == null) lines = new java.util.ArrayList<>();
+        if (lines == null) lines = new ArrayList<>();
         lines.add(line);
         line.setWork(this);
     }

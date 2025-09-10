@@ -56,7 +56,6 @@ public class WorkLineService {
         return workLineRepository.save(wl);
     }
 
-    @Transactional
     public WorkLine patch(Long id, WorkLinePatchRequest request) {
         WorkLine wl = workLineRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("message.exception.not-found.works"));

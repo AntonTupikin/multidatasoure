@@ -4,17 +4,21 @@ import com.example.multidatasoure.controller.request.WorkCreateRequest;
 import com.example.multidatasoure.controller.response.WorkResponse;
 import com.example.multidatasoure.entity.primary.Estimate;
 import com.example.multidatasoure.entity.primary.User;
+import com.example.multidatasoure.entity.primary.Work;
+import com.example.multidatasoure.entity.primary.WorkLine;
 import com.example.multidatasoure.mapper.WorkMapper;
 import com.example.multidatasoure.service.EstimateService;
 import com.example.multidatasoure.service.UserService;
-import com.example.multidatasoure.service.WorkService;
 import com.example.multidatasoure.service.WorkLineService;
+import com.example.multidatasoure.service.WorkService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
- 
+import java.util.List;
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,11 +35,9 @@ public class WorkCreateScenario {
         User user = userService.findById(userId);
         User employee = userService.findById(employeeId);
         Estimate estimate = estimateService.getByIdAndUser(request.estimateId(), user);
-        var work = worksService.save(employee, request);
-        // create lines with validations
-        var created = workLineService.createPlannedLines(work, estimate, request.lines());
-        // attach to work for response
-        created.forEach(work::addLine);
+        Work work = worksService.save(employee, request);
+        List<WorkLine> workLines = workLineService.createPlannedLines(work, estimate, request.lines());
+        worksService.setWorkLines(work, workLines);
         return workMapper.toResponse(work);
     }
 }
