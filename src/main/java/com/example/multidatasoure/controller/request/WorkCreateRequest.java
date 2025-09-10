@@ -4,10 +4,11 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 public record WorkCreateRequest(
         @NotNull Long estimateId,
-        @NotNull Long estimateItemId,
+        @NotNull List<Long> estimateItemIds,
         Long estimateCatalogItemId,
         Instant plannedStartDate,
         Instant plannedEndDate,

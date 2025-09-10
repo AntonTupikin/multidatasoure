@@ -44,8 +44,8 @@ public class Work {
     @ManyToOne
     @ToString.Exclude
     private User employee;
-    @Enumerated(EnumType.STRING)
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WorkStatus workStatus;
 

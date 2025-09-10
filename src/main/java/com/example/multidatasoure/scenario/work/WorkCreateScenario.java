@@ -11,9 +11,13 @@ import com.example.multidatasoure.service.EstimateService;
 import com.example.multidatasoure.service.UserService;
 import com.example.multidatasoure.service.WorkService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WorkCreateScenario {
@@ -25,11 +29,11 @@ public class WorkCreateScenario {
 
     @Transactional
     public WorkResponse create(Long userId, Long employeeId, WorkCreateRequest request) {
+        log.info("Create work for user {} and employee {}", userId, employeeId);
         User user = userService.findById(userId);
         User employee = userService.findById(employeeId);
-        // validate estimate and item belong together
         Estimate estimate = estimateService.getByIdAndUser(request.estimateId(), user);
-        EstimateItem estimateItem = estimateItemService.getByIdAndEstimate(request.estimateItemId(), estimate);
-        return workMapper.toResponse(worksService.save(employee, estimateItem, request));
+        Set<EstimateItem> estimateItems = request.estimateItemIds().stream().map(id->estimateItemService.getByIdAndEstimate(id,estimate)).collect(Collectors.toSet());
+        return workMapper.toResponse(worksService.save(employee, estimateItems, request));
     }
 }

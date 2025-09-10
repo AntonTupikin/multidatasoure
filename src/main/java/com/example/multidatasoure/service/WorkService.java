@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class WorkService {
     private final WorkRepository workRepository;
 
-    public Work save(User employee, EstimateItem estimateItem, WorkCreateRequest request) {
-
+    public Work save(User employee, Set<EstimateItem> estimateItems, WorkCreateRequest request) {
         Work work = new Work();
         work.setEmployee(employee);
         setWorkStatus(work, WorkStatus.PLANNED);
@@ -36,10 +36,7 @@ public class WorkService {
         if (request.actualEndDate() != null) {
             work.setActualEndDate(request.actualEndDate().atOffset(ZoneOffset.UTC));
         }
-
-        // Link with the provided estimate item (ManyToMany)
-        work.addEstimateItem(estimateItem);
-
+        work.setEstimateItems(estimateItems);
         return workRepository.save(work);
     }
 

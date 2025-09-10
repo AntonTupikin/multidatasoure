@@ -1,20 +1,17 @@
 package com.example.multidatasoure.controller.response;
 
-import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 public record WorkResponse(
         Long id,
         Long employeeId,
         String employeeUsername,
         Long estimateId,
-        Long estimateItemId,
-        Long estimateCatalogItemId,
+        List<EstimateItemResponse> estimateItems,
         String workStatus,
         Instant plannedStartDate,
         Instant plannedEndDate,
         Instant actualStartDate,
-        Instant actualEndDate,
-        BigDecimal estimateItemQuantity,
-        BigDecimal estimateCatalogItemQuantity
+        Instant actualEndDate
 ) {}
