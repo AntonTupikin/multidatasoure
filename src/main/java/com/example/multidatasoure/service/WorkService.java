@@ -1,7 +1,6 @@
 package com.example.multidatasoure.service;
 
 import com.example.multidatasoure.controller.request.WorkCreateRequest;
-import com.example.multidatasoure.entity.primary.EstimateItem;
 import com.example.multidatasoure.entity.primary.User;
 import com.example.multidatasoure.entity.primary.Work;
 import com.example.multidatasoure.entity.primary.WorkStatus;
@@ -20,7 +19,7 @@ import java.util.Set;
 public class WorkService {
     private final WorkRepository workRepository;
 
-    public Work save(User employee, Set<EstimateItem> estimateItems, WorkCreateRequest request) {
+    public Work save(User employee, WorkCreateRequest request) {
         Work work = new Work();
         work.setEmployee(employee);
         setWorkStatus(work, WorkStatus.PLANNED);
@@ -36,7 +35,6 @@ public class WorkService {
         if (request.actualEndDate() != null) {
             work.setActualEndDate(request.actualEndDate().atOffset(ZoneOffset.UTC));
         }
-        work.setEstimateItems(estimateItems);
         return workRepository.save(work);
     }
 

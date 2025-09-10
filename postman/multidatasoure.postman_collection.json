@@ -374,6 +374,7 @@
           }
         },
         { "name": "Estimate Item History", "request": { "method": "GET", "url": "{{baseUrl}}/api/estimates/1/items/1/history" } },
+        { "name": "Estimate Item Availability", "request": { "method": "GET", "url": "{{baseUrl}}/api/estimates/1/items/1/availability" } },
         {
           "name": "Add Catalog Item To Estimate",
           "request": {
@@ -413,7 +414,7 @@
             "method": "POST",
             "header": [ {"key":"Content-Type","value":"application/json"} ],
             "url": "{{baseUrl}}/api/users/2/works",
-            "body": {"mode":"raw","raw":"{\n  \"estimateId\": 1,\n  \"estimateItemId\": 1,\n  \"estimateCatalogItemId\": 1,\n  \"workStatus\": \"PLANNED\",\n  \"plannedStartDate\": \"2025-09-10T10:00:00Z\",\n  \"plannedEndDate\": \"2025-09-11T18:00:00Z\",\n  \"actualStartDate\": null,\n  \"actualEndDate\": null,\n  \"estimateItemQuantity\": 50,\n  \"estimateCatalogItemQuantity\": 10\n}","options":{"raw":{"language":"json"}}}
+            "body": {"mode":"raw","raw":"{\n  \"estimateId\": 1,\n  \"plannedStartDate\": \"2025-09-10T10:00:00Z\",\n  \"plannedEndDate\": \"2025-09-11T18:00:00Z\",\n  \"lines\": [\n    { \"estimateItemId\": 1, \"qtyPlanned\": 50 },\n    { \"estimateItemId\": 2, \"qtyPlanned\": 30.5 }\n  ]\n}","options":{"raw":{"language":"json"}}}
           }
         },
         {
@@ -424,9 +425,17 @@
             "url": "{{baseUrl}}/api/works/1",
             "body": {"mode":"raw","raw":"{\n  \"employeeId\": 2,\n  \"workStatus\": \"IN_PROGRESS\",\n  \"actualStartDate\": \"2025-09-10T11:00:00Z\"\n}","options":{"raw":{"language":"json"}}}
           }
+        },
+        {
+          "name": "Patch Work Line",
+          "request": {
+            "method": "PATCH",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "url": "{{baseUrl}}/api/work-lines/1",
+            "body": {"mode":"raw","raw":"{\n  \"qtyPlanned\": 60,\n  \"qtyActual\": 50,\n  \"status\": \"DONE\"\n}","options":{"raw":{"language":"json"}}}
+          }
         }
       ]
     }
   ]
 }
-

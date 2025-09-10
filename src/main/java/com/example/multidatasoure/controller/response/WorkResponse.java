@@ -8,7 +8,7 @@ public record WorkResponse(
         Long employeeId,
         String employeeUsername,
         Long estimateId,
-        List<EstimateItemResponse> estimateItems,
+        List<WorkLineResponse> lines,
         String workStatus,
         Instant plannedStartDate,
         Instant plannedEndDate,

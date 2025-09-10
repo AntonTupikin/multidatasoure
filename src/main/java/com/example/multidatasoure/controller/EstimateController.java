@@ -55,6 +55,7 @@ public class EstimateController {
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemListScenario estimateCatalogItemListScenario;
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemDeleteScenario estimateCatalogItemDeleteScenario;
     private final com.example.multidatasoure.scenario.estimate.EstimateCatalogItemPatchScenario estimateCatalogItemPatchScenario;
+    private final com.example.multidatasoure.scenario.estimate.EstimateItemAvailabilityScenario estimateItemAvailabilityScenario;
 
     @Operation(summary = "Создание сметы для проекта", security = @SecurityRequirement(name = "bearer"))
     @ResponseStatus(HttpStatus.CREATED)
@@ -147,6 +148,17 @@ public class EstimateController {
             @PathVariable Long itemId
     ) {
         return estimateItemHistoryScenario.history(userService.get(principal).getId(), estimateId, itemId);
+    }
+
+    @Operation(summary = "Доступность по позиции сметы (план/остаток/факт)", security = @SecurityRequirement(name = "bearer"))
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/estimates/{estimateId}/items/{itemId}/availability")
+    public com.example.multidatasoure.controller.response.EstimateItemAvailabilityResponse availability(
+            Principal principal,
+            @PathVariable Long estimateId,
+            @PathVariable Long itemId
+    ) {
+        return estimateItemAvailabilityScenario.availability(userService.get(principal).getId(), estimateId, itemId);
     }
 
     // Каталожные позиции в смету

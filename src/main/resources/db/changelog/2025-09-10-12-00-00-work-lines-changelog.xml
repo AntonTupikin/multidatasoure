@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        logicalFilePath="db/changelog/2025-09-10-12-00-00-work-lines-changelog.xml">
+    <changeSet id="2025-09-10-12-00-00-work-lines" author="codex" failOnError="true">
+        <comment>Add work_lines table for planned execution per estimate item</comment>
+        <createTable tableName="work_lines">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_work_lines" nullable="false"/>
+            </column>
+            <column name="work_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estimate_item_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qty_planned" type="DECIMAL(19,3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qty_actual" type="DECIMAL(19,3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="work_lines" indexName="i_work_lines_work_id">
+            <column name="work_id"/>
+        </createIndex>
+        <createIndex tableName="work_lines" indexName="i_work_lines_estimate_item_id">
+            <column name="estimate_item_id"/>
+        </createIndex>
+        <createIndex tableName="work_lines" indexName="i_work_lines_status">
+            <column name="status"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseTableName="work_lines" baseColumnNames="work_id"
+                                 referencedTableName="works" referencedColumnNames="id"
+                                 constraintName="fk_work_lines_on_work" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="work_lines" baseColumnNames="estimate_item_id"
+                                 referencedTableName="estimate_items" referencedColumnNames="id"
+                                 constraintName="fk_work_lines_on_estimate_item" onDelete="CASCADE"/>
+
+        <rollback>
+            <dropTable tableName="work_lines"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
+

@@ -1,6 +1,8 @@
 package com.example.multidatasoure.entity.primary;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -67,6 +69,10 @@ public class Work {
             inverseJoinColumns = @JoinColumn(name = "estimate_item_id"))
     private Set<EstimateItem> estimateItems = new HashSet<>();
 
+    @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private java.util.List<WorkLine> lines = new java.util.ArrayList<>();
+
     public void addEstimateItem(EstimateItem ei) {
         estimateItems.add(ei);
         ei.getWorks().add(this);
@@ -74,6 +80,19 @@ public class Work {
     public void removeEstimateItem(EstimateItem ei) {
         estimateItems.remove(ei);
         ei.getWorks().remove(this);
+    }
+
+    public void addLine(WorkLine line) {
+        if (lines == null) lines = new java.util.ArrayList<>();
+        lines.add(line);
+        line.setWork(this);
+    }
+
+    public void removeLine(WorkLine line) {
+        if (lines != null) {
+            lines.remove(line);
+            line.setWork(null);
+        }
     }
 
     @Override
