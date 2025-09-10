@@ -52,6 +52,10 @@ public class WorkService {
         return workRepository.findAllByEmployeeOrderByActualStartDateDescIdDesc(employee);
     }
 
+    public List<Work> getAllByEstimateId(Long estimateId) {
+        return workRepository.findAllByEstimateId(estimateId);
+    }
+
     public Work save(Work work) {
         return workRepository.save(work);
     }

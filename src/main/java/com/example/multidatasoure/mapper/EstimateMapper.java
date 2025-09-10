@@ -12,11 +12,17 @@ import org.mapstruct.Mapping;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {com.example.multidatasoure.mapper.WorkMapper.class})
 public interface EstimateMapper {
     @Mapping(target = "projectId", source = "project.id")
     @Mapping(target = "items", expression = "java(toItemResponses(entity.getItems()))")
+    @Mapping(target = "works", expression = "java(java.util.List.of())")
     EstimateResponse toEstimateResponse(Estimate entity);
+
+    @Mapping(target = "projectId", source = "project.id")
+    @Mapping(target = "items", expression = "java(toItemResponses(entity.getItems()))")
+    @Mapping(target = "works", source = "works")
+    EstimateResponse toEstimateResponse(Estimate entity, java.util.List<com.example.multidatasoure.entity.primary.Work> works);
 
     default List<EstimateItemResponse> toItemResponses(List<EstimateItem> items) {
         return items == null ? List.of() : items.stream().map(this::toItemResponse).toList();

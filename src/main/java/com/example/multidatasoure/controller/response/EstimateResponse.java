@@ -11,6 +11,6 @@ public record EstimateResponse(
         String title,
         String currency,
         String notes,
-        List<EstimateItemResponse> items
+        List<EstimateItemResponse> items,
+        List<WorkResponse> works
 ) {}
-

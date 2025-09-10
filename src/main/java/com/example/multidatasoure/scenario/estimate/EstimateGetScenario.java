@@ -8,6 +8,7 @@ import com.example.multidatasoure.mapper.EstimateMapper;
 import com.example.multidatasoure.service.EstimateItemService;
 import com.example.multidatasoure.service.EstimateService;
 import com.example.multidatasoure.service.UserService;
+import com.example.multidatasoure.service.WorkService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,19 +24,22 @@ public class EstimateGetScenario {
     private final EstimateItemService estimateItemService;
     private final UserService userService;
     private final EstimateMapper estimateMapper;
+    private final WorkService workService;
 
     @Transactional(readOnly = true)
     public EstimateResponse getById(Long userId, Long id) {
         User user = userService.findById(userId);
         Estimate estimate = estimateService.getByIdAndUser(id, user);
-        return estimateMapper.toEstimateResponse(estimate);
+        var works = workService.getAllByEstimateId(estimate.getId());
+        return estimateMapper.toEstimateResponse(estimate, works);
     }
 
     @Transactional(readOnly = true)
     public EstimateResponse getByProject(Long userId, Long projectId) {
         User user = userService.findById(userId);
         Estimate estimate = estimateService.getByProjectIdAndUser(projectId, user);
-        return estimateMapper.toEstimateResponse(estimate);
+        var works = workService.getAllByEstimateId(estimate.getId());
+        return estimateMapper.toEstimateResponse(estimate, works);
     }
 
     @Transactional(readOnly = true)
@@ -44,4 +48,3 @@ public class EstimateGetScenario {
         return estimateItemService.listItems(user, estimateId).stream().map(estimateMapper::toItemResponse).toList();
     }
 }
-
