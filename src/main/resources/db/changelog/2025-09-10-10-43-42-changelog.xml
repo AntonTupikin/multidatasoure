@@ -18,39 +18,47 @@
             <column name="planned_end_date" type="timestamp"/>
             <column name="actual_start_date" type="timestamp"/>
             <column name="actual_end_date" type="timestamp"/>
-            <column name="estimate_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="estimate_item_id" type="BIGINT">
-            </column>
-            <column name="estimate_catalog_item_id" type="BIGINT">
-            </column>
             <column name="work_status" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="estimate_item_quantity" type="NUMERIC(19,3)" defaultValueNumeric="0">
-            </column>
-            <column name="estimate_catalog_item_quantity" type="NUMERIC(19,3)" defaultValueNumeric="0">
-            </column>
         </createTable>
-        <createIndex tableName="works" indexName="i_works_employee_id">
-            <column name="estimate_id"/>
-        </createIndex>
         <createIndex tableName="works" indexName="i_works_work_status">
             <column name="work_status"/>
         </createIndex>
         <addForeignKeyConstraint baseColumnNames="employee_id" baseTableName="works"
                                  constraintName="fk_works_on_employee" referencedColumnNames="id"
                                  referencedTableName="users" onDelete="CASCADE"/>
-        <addForeignKeyConstraint baseColumnNames="estimate_id" baseTableName="works"
-                                 constraintName="fk_works_on_estimate" referencedColumnNames="id"
-                                 referencedTableName="estimates" onDelete="CASCADE"/>
-        <addForeignKeyConstraint baseColumnNames="estimate_catalog_item_id" baseTableName="works"
-                                 constraintName="fk_works_on_estimate_catalog_item" referencedColumnNames="id"
-                                 referencedTableName="estimate_catalog_items" onDelete="CASCADE"/>
-        <addForeignKeyConstraint baseColumnNames="estimate_item_id" baseTableName="works"
-                                 constraintName="fk_works_on_estimate_item" referencedColumnNames="id"
-                                 referencedTableName="estimate_items"/>
+        <createTable tableName="works_estimate_items">
+            <column name="id" autoIncrement="true" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_works_estimate_items" nullable="false"/>
+            </column>
+            <column name="work_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estimate_item_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="works_estimate_items" indexName="i_works_estimate_item_id">
+            <column name="work_id"/>
+        </createIndex>
+        <addUniqueConstraint tableName="works_estimate_items" columnNames="works_id, estimate_item_id"
+                             constraintName="uk_works_estimate_items_work_id_estimate_item_id"/>
+        <addForeignKeyConstraint
+                baseTableName="works_estimate_items"
+                baseColumnNames="estimate_item_id"
+                referencedTableName="estimate_items"
+                referencedColumnNames="id"
+                constraintName="fk_worestite_on_estimate_item"/>
+
+        <addForeignKeyConstraint
+                baseTableName="works_estimate_items"
+                baseColumnNames="works_id"
+                referencedTableName="works"
+                referencedColumnNames="id"
+                constraintName="fk_worestite_on_work"/>
+
+
     <rollback>
         <dropTable tableName="works"/>
     </rollback>

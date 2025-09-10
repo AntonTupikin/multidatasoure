@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,9 +21,10 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -58,28 +61,20 @@ public class Work {
     @Column
     private OffsetDateTime actualEndDate;
 
-    @JoinColumn(nullable = false)
-    @ManyToOne
-    @ToString.Exclude
-    private Estimate estimate;
+    @ManyToMany
+    @JoinTable(name = "works_estimate_items",
+            joinColumns = @JoinColumn(name = "works_id"),
+            inverseJoinColumns = @JoinColumn(name = "estimate_item_id"))
+    private Set<EstimateItem> estimateItems = new HashSet<>();
 
-    @JoinColumn
-    @ManyToOne
-    @ToString.Exclude
-    private EstimateItem estimateItem;
-
-    @Column(nullable = false, precision = 19, scale = 3)
-    @Builder.Default
-    private BigDecimal estimateItemQuantity = BigDecimal.ZERO;
-
-    @JoinColumn
-    @ManyToOne
-    @ToString.Exclude
-    private EstimateCatalogItem estimateCatalogItem;
-
-    @Column(nullable = false, precision = 19, scale = 3)
-    @Builder.Default
-    private BigDecimal estimateCatalogItemQuantity = BigDecimal.ZERO;
+    public void addEstimateItem(EstimateItem ei) {
+        estimateItems.add(ei);
+        ei.getWorks().add(this);
+    }
+    public void removeEstimateItem(EstimateItem ei) {
+        estimateItems.remove(ei);
+        ei.getWorks().remove(this);
+    }
 
     @Override
     public final boolean equals(Object o) {
